@@ -238,6 +238,10 @@ function AppContent() {
       <div className="app">
         {/* Bouton flottant global pour le mode clair/sombre */}
         <GlobalThemeToggle />
+        {/* Bouton flottant pour notifications push */}
+        <div style={{ position: 'fixed', top: 10, right: 10, zIndex: 1000 }}>
+          <PushNotificationButton />
+        </div>
         <ErrorBoundary>
           <AppRoutes />
         </ErrorBoundary>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ConversationList from './ConversationList';
 import ConversationView from './ConversationView';
+import './messaging.css';
 import Sidebar from '../Layout/Sidebar';
 import Footer from '../Layout/Footer';
 import { useAuth } from '../../context/AuthContext';
@@ -41,10 +42,10 @@ const MessagingPage = () => {
       
       <main className="messaging-main">
         <header className="messaging-header">
-          <div className="header-left">
-            <h1>Messages</h1>
-            <div className="online-indicator">
-              <span className="dot"></span>
+          <div className="header-left" style={{ alignItems: 'center', gap: 24 }}>
+            <h1 style={{ fontWeight: 700, fontSize: 28, color: 'var(--primary-color)', margin: 0, letterSpacing: 1 }}>Messages</h1>
+            <div className="online-indicator" style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'var(--success-color)', borderRadius: 16, padding: '4px 12px', color: '#fff', fontWeight: 500, fontSize: 15 }}>
+              <span className="dot" style={{ width: 10, height: 10, background: '#fff', borderRadius: '50%', marginRight: 8, display: 'inline-block', boxShadow: '0 0 4px #333' }}></span>
               <span>En ligne</span>
             </div>
           </div>
@@ -82,28 +83,19 @@ const MessagingPage = () => {
           />
           
           {!selectedConversation && (
-            <div className="welcome-screen">
-              <div className="welcome-content">
-                <div className="welcome-icon">
-                  <svg width="80" height="80" viewBox="0 0 24 24" fill="none">
-                    <path d="M21 11.5C21.0034 12.8199 20.6951 14.1219 20.1 15.3C19.3944 16.7118 18.3098 17.8992 16.9674 18.7293C15.6251 19.5594 14.0782 19.9994 12.5 20C11.1801 20.0034 9.87812 19.6951 8.7 19.1L3 21L4.9 15.3C4.30493 14.1219 3.99656 12.8199 4 11.5C4.00061 9.92179 4.44061 8.37488 5.27072 7.03258C6.10083 5.69028 7.28825 4.6056 8.7 3.90003C9.87812 3.30496 11.1801 2.99659 12.5 3.00003H13C15.0843 3.11502 17.053 3.99479 18.5291 5.47089C20.0052 6.94699 20.885 8.91568 21 11V11.5Z" 
-                      stroke="#4A5568" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <h2>Votre messagerie</h2>
-                <p>Sélectionnez une conversation pour commencer à discuter</p>
-                <div className="welcome-features">
-                  <div className="feature">
-                    <span className="feature-icon">🔒</span>
-                    <span>Messages chiffrés de bout en bout</span>
+            <div className="welcome-screen" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+              <div className="welcome-content" style={{ textAlign: 'center', maxWidth: 480, padding: 32 }}>
+                <h2 style={{ fontWeight: 700, fontSize: 32, marginBottom: 16, color: '#fff' }}>Votre messagerie</h2>
+                <p style={{ fontSize: 18, opacity: 0.9, marginBottom: 32 }}>Sélectionnez une conversation pour commencer à discuter</p>
+                <div className="welcome-features" style={{ marginTop: 32 }}>
+                  <div className="feature" style={{ fontSize: 16, marginBottom: 12 }}>
+                    <strong>Messages chiffrés de bout en bout</strong>
                   </div>
-                  <div className="feature">
-                    <span className="feature-icon">🚀</span>
-                    <span>Notifications en temps réel</span>
+                  <div className="feature" style={{ fontSize: 16, marginBottom: 12 }}>
+                    <strong>Notifications en temps réel</strong>
                   </div>
-                  <div className="feature">
-                    <span className="feature-icon">📎</span>
-                    <span>Partage de fichiers</span>
+                  <div className="feature" style={{ fontSize: 16 }}>
+                    <strong>Partage de fichiers</strong>
                   </div>
                 </div>
               </div>
@@ -111,7 +103,7 @@ const MessagingPage = () => {
           )}
         </div>
         
-        <Footer />
+        {/* Footer retiré pour affichage complet de la messagerie */}
       </main>
     </div>
   );
