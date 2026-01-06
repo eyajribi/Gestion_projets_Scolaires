@@ -4,6 +4,7 @@ import DeliverableList from '../livrable/DeliverableList';
 import ProjectInfo from './ProjectInfoModal';
 import TeamMembers from '../group/TeamMembers';
 import ProgressChart from '../../../Common/ProgressChart';
+import StatisticsReporting from '../../../Statistics/StatisticsReporting';
 import LoadingSpinner from '../../../UI/LoadingSpinner';
 
 const ProjectDetails = ({ 
@@ -132,6 +133,7 @@ const ProjectDetails = ({
               tasks={tasks}
               detailed={true} 
             />
+            <StatisticsReporting />
             {/* Autres graphiques et statistiques détaillées */}
             <div className="analytics-grid">
               <div className="analytics-card">

@@ -7,7 +7,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import LoadingSpinner from "./components/UI/LoadingSpinner";
 import ErrorBoundary from "./components/UI/ErrorBoundary";
 import GlobalThemeToggle from "./components/UI/GlobalThemeToggle";
+
 import Footer from "./components/Layout/Footer";
+
+import PushNotificationButton from "./components/Common/PushNotificationButton";
 
 import "./App.css";
 import "./styles/globals.css";
