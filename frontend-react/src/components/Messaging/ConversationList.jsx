@@ -207,11 +207,7 @@ const ConversationList = ({ onSelect, selectedId }) => {
                 setCreating(true);
                 setModalError(null);
                 try {
-                  const response = await api.post(`/api/messagerie/conversations?groupeId=${selectedGroup.id}&enseignantId=${enseignantId}`);
-                  // Sélectionner automatiquement la nouvelle conversation
-                  if (response && response.data && typeof onSelect === 'function') {
-                    onSelect(response.data);
-                  }
+                  await api.post(`/api/messagerie/conversations?groupeId=${selectedGroup.id}&enseignantId=${enseignantId}`);
                   setShowNewConv(false);
                   setSelectedGroup(null);
                   setGroupSearch('');

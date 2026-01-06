@@ -35,19 +35,25 @@ const StatisticsPanel = ({ projects, getProjectTasks, onBack }) => {
     const plannedProjects = projects.filter(p => p.statut === 'PLANIFIE').length;
     
     // Calcul des tâches (en utilisant la fonction getProjectTasks si fournie)
+    // Récupère toutes les tâches via getProjectTasks si dispo
     const allTasks = projects.flatMap(p => {
-      if (typeof getProjectTasks === 'function') {
-        return getProjectTasks(p.id) || [];
-      }
-      return p.taches || [];
+      return typeof getProjectTasks === 'function' ? getProjectTasks(p.id) || [] : p.taches || [];
     });
     const completedTasks = allTasks.filter(t => t.statut === 'TERMINEE').length;
     const delayedTasks = allTasks.filter(t => t.statut === 'EN_RETARD').length;
     const inProgressTasks = allTasks.filter(t => t.statut === 'EN_COURS').length;
     
-    // Progression moyenne
-    const averageProgress = projects.length > 0 
-      ? projects.reduce((sum, p) => sum + (p.pourcentageAvancement || 0), 0) / projects.length
+    // Progression moyenne basée sur le taux de complétion des tâches par projet (récupérées via getProjectTasks si dispo)
+    const projectsWithTasks = projects.filter(p => {
+      const taches = typeof getProjectTasks === 'function' ? getProjectTasks(p.id) || [] : p.taches || [];
+      return taches.length > 0;
+    });
+    const averageProgress = projectsWithTasks.length > 0
+      ? projectsWithTasks.reduce((sum, p) => {
+          const taches = typeof getProjectTasks === 'function' ? getProjectTasks(p.id) || [] : p.taches || [];
+          const completed = taches.filter(t => t.statut === 'TERMINEE').length;
+          return sum + (completed / taches.length) * 100;
+        }, 0) / projectsWithTasks.length
       : 0;
 
     // Données pour les graphiques
@@ -138,7 +144,7 @@ const StatisticsPanel = ({ projects, getProjectTasks, onBack }) => {
         : 0
     })).sort((a, b) => b.tauxCompletion - a.tauxCompletion);
 
-    // Identification des éléments à risque pour la vue "Risques"
+    // Identification des éléments à risque pour la vue "Risques" (corrigé)
     const now = new Date();
     const riskProjects = projects
       .map(project => {
@@ -146,23 +152,28 @@ const StatisticsPanel = ({ projects, getProjectTasks, onBack }) => {
           ? getProjectTasks(project.id)
           : project.taches) || [];
 
-        const projectDelayedTasks = projectTasks.filter(t => t.statut === 'EN_RETARD');
+        const delayedTasks = projectTasks.filter(t => t.statut === 'EN_RETARD').length;
+        const totalTasks = projectTasks.length;
         const hasNearDeadline = project.dateFin
           ? (new Date(project.dateFin) - now) / (1000 * 60 * 60 * 24) <= 3
           : false;
 
         const riskScore =
-          (projectDelayedTasks.length > 0 ? 2 : 0) +
+          (delayedTasks > 0 ? 2 : 0) +
           (hasNearDeadline ? 1 : 0) +
           ((project.pourcentageAvancement || 0) < 30 ? 1 : 0);
+
+        // Calcul du taux de retard (%)
+        const tauxRetard = totalTasks > 0 ? Math.round((delayedTasks / totalTasks) * 100) : 0;
 
         return {
           id: project.id,
           name: project.nom,
           statut: project.statut,
           progression: project.pourcentageAvancement || 0,
-          delayedTasks: projectDelayedTasks.length,
-          totalTasks: projectTasks.length,
+          delayedTasks,
+          totalTasks,
+          tauxRetard,
           daysToDeadline: project.dateFin
             ? Math.round((new Date(project.dateFin) - now) / (1000 * 60 * 60 * 24))
             : null,
@@ -282,20 +293,6 @@ const StatisticsPanel = ({ projects, getProjectTasks, onBack }) => {
           </AreaChart>
         </ResponsiveContainer>
       </div>
-      {/* Distribution des notes (TOTAL) */}
-      <div className="chart-card full-width">
-        <h4 className="comparaison-title-centered" style={{marginBottom: '1.2rem'}}>Distribution des notes (TOTAL)</h4>
-        <ResponsiveContainer width="100%" height={320}>
-          <BarChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-            <XAxis dataKey="name" tick={{fontSize: 13}} />
-            <YAxis domain={[0, Math.max(...chartData.map(d => d.Note), 10)]} tick={{fontSize: 13}} allowDecimals={false} />
-            <Tooltip cursor={{fill: '#f3f6fa'}} />
-            <Bar dataKey="Note" fill="#3b82f6" radius={[6, 6, 0, 0]} barSize={38}>
-              <LabelList dataKey="Note" position="top" style={{fontWeight: 600, fill: '#222'}} />
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
     </div>
   );
 
@@ -311,7 +308,15 @@ const StatisticsPanel = ({ projects, getProjectTasks, onBack }) => {
             <YAxis type="category" dataKey="name" width={100} />
             <Tooltip formatter={(value) => [`${value}%`, 'Taux de complétion']} />
             <Legend />
-            <Bar dataKey="tauxCompletion" name="Taux de complétion" fill="#3b82f6" />
+            <Bar dataKey="tauxCompletion" name="Taux de complétion">
+              {stats.projectPerformance && stats.projectPerformance.map((entry, index) => {
+                let color = '#ef4444'; // rouge par défaut
+                if (entry.tauxCompletion >= 75) color = '#10b981'; // vert
+                else if (entry.tauxCompletion >= 50) color = '#3b82f6'; // bleu
+                else if (entry.tauxCompletion >= 25) color = '#f59e42'; // orange
+                return <Cell key={`cell-${index}`} fill={color} />;
+              })}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -402,21 +407,7 @@ const StatisticsPanel = ({ projects, getProjectTasks, onBack }) => {
           </div>
         </div>
 
-        <div className="stat-card-large">
-          <div className="stat-icon">
-            <i className="fas fa-clock"></i>
-          </div>
-          <div className="stat-content">
-            <div className="stat-value">
-              {stats.totalTasks > 0 ? Math.round((stats.delayedTasks / stats.totalTasks) * 100) : 0}%
-            </div>
-            <div className="stat-label">Taux de Retard</div>
-            <div className="stat-trend negative">
-              <i className="fas fa-arrow-up"></i>
-              Nécessite attention
-            </div>
-          </div>
-        </div>
+        {/* Carte Taux de Retard supprimée */}
       </div>
     </div>
   );
@@ -441,6 +432,7 @@ const StatisticsPanel = ({ projects, getProjectTasks, onBack }) => {
                 <th>Projet</th>
                 <th>Statut</th>
                 <th>Tâches en retard</th>
+                <th>Total tâches</th>
                 <th>Progression</th>
                 <th>Jours avant échéance</th>
                 <th>Niveau de risque</th>
@@ -451,9 +443,8 @@ const StatisticsPanel = ({ projects, getProjectTasks, onBack }) => {
                 <tr key={project.id}>
                   <td>{project.name}</td>
                   <td>{project.statut}</td>
-                  <td className={project.delayedTasks > 0 ? 'text-danger' : ''}>
-                    {project.delayedTasks}
-                  </td>
+                  <td className={project.delayedTasks > 0 ? 'text-danger' : ''}>{project.delayedTasks}</td>
+                  <td>{project.totalTasks}</td>
                   <td>
                     <div className="risk-progress-bar">
                       <div

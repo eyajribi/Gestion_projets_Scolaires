@@ -857,12 +857,7 @@ function safePercent(val, fallback = 0) {
                     </div>
                   </div>
                 )}
-          <button className="btn-icon" title="Commentaires">
-            <i className="fas fa-comment"></i>
-          </button>
-          <button className="btn-icon" title="Pièces jointes" onClick={() => setShowAttachmentModal(true)}>
-            <i className="fas fa-paperclip"></i>
-          </button>
+        
           {showAttachmentModal && (
             <div className="modal-overlay active" style={{
               zIndex: 1200,
@@ -888,66 +883,18 @@ function safePercent(val, fallback = 0) {
                   onMouseOver={e => e.currentTarget.style.color = '#2563eb'}
                   onMouseOut={e => e.currentTarget.style.color = '#64748b'}
                 >×</button>
-                <h3 style={{ marginTop: 0, marginBottom: 18, color: '#2563eb', fontWeight: 800, fontSize: 23, letterSpacing: 0.2, textAlign: 'center', display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <i className="fas fa-paperclip" style={{ fontSize: 22 }}></i> Pièces jointes
-                </h3>
-                <form onSubmit={handleAttachmentUpload} style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'center' }}>
-                  <label htmlFor="file-upload-modal" style={{
-                    display: 'flex', alignItems: 'center', gap: 10, cursor: attachmentLoading ? 'not-allowed' : 'pointer',
-                    background: '#f1f5f9', borderRadius: 8, padding: '10px 18px', border: '1.5px dashed #2563eb', fontWeight: 600, color: '#2563eb', fontSize: 15, transition: 'background 0.2s, color 0.2s', marginBottom: 2
-                  }}>
-                    <i className="fas fa-cloud-upload-alt" style={{ fontSize: 18 }}></i>
-                    {selectedFile ? selectedFile.name : 'Sélectionner un fichier...'}
-                    <input id="file-upload-modal" type="file" onChange={e => setSelectedFile(e.target.files[0])} disabled={attachmentLoading}
-                      style={{ display: 'none' }} />
-                  </label>
-                  <button type="submit" className="btn btn-primary" disabled={attachmentLoading || !selectedFile}
-                    style={{
-                      minWidth: 140,
-                      fontWeight: 800,
-                      fontSize: 16,
-                      borderRadius: 8,
-                      padding: '10px 0',
-                      background: 'linear-gradient(90deg, #2563eb 70%, #3b82f6 100%)',
-                      color: '#fff',
-                      border: 'none',
-                      boxShadow: '0 2px 8px #2563eb22',
-                      letterSpacing: 0.2,
-                      transition: 'background 0.2s, color 0.2s',
-                      marginTop: 2,
-                      cursor: attachmentLoading || !selectedFile ? 'not-allowed' : 'pointer'
-                    }}>
-                    {attachmentLoading ? <i className="fas fa-spinner fa-spin"></i> : <><i className="fas fa-upload"></i> Envoyer</>}
-                  </button>
-                  {attachmentMessage && <div style={{ marginTop: 8, color: attachmentMessage.startsWith('✅') ? '#059669' : '#b91c1c', fontWeight: 700, fontSize: 15, textAlign: 'center', display: 'flex', alignItems: 'center', gap: 6 }}>
-                    {attachmentMessage.startsWith('✅') ? <i className="fas fa-check-circle"></i> : <i className="fas fa-exclamation-circle"></i>}
-                    {attachmentMessage}
-                  </div>}
-                </form>
-                <div style={{ width: '100%', marginTop: 22, borderTop: '1.5px solid #e5e7eb', paddingTop: 14 }}>
-                  <div style={{ fontWeight: 700, color: '#2563eb', marginBottom: 8, fontSize: 15, display: 'flex', alignItems: 'center', gap: 7 }}>
-                    <i className="fas fa-folder-open"></i> Fichiers déjà joints
-                  </div>
+               
+                
+                <div style={{ width: '100%', marginTop: 18 }}>
+                  <div style={{ fontWeight: 700, color: '#2563eb', marginBottom: 6, fontSize: 15 }}>Fichiers déjà joints :</div>
                   {filesLoading ? (
-                    <div style={{ color: '#64748b', fontSize: 15, display: 'flex', alignItems: 'center', gap: 6 }}><i className="fas fa-spinner fa-spin"></i> Chargement...</div>
+                    <div style={{ color: '#64748b', fontSize: 15 }}>Chargement...</div>
                   ) : attachedFiles && attachedFiles.length > 0 ? (
-                    <ul style={{ paddingLeft: 0, margin: 0, listStyle: 'none' }}>
+                    <ul style={{ paddingLeft: 18, margin: 0 }}>
                       {attachedFiles.map(file => (
-                        <li key={file.id || file.nom} style={{ marginBottom: 7, borderRadius: 7, transition: 'background 0.2s', padding: '4px 0' }}>
-                          <a href={file.url} target="_blank" rel="noopener noreferrer"
-                            style={{
-                              color: '#2563eb',
-                              textDecoration: 'none',
-                              fontWeight: 600,
-                              display: 'flex', alignItems: 'center', gap: 7,
-                              padding: '4px 8px', borderRadius: 6,
-                              transition: 'background 0.2s, color 0.2s',
-                            }}
-                            onMouseOver={e => { e.currentTarget.style.background = '#e0e7ef'; e.currentTarget.style.color = '#1e40af'; }}
-                            onMouseOut={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = '#2563eb'; }}
-                          >
-                            <i className="fas fa-file-alt" style={{ fontSize: 16 }}></i>{file.nom || file.filename || 'Fichier'}
-                            <i className="fas fa-external-link-alt" style={{ fontSize: 12, marginLeft: 4, opacity: 0.7 }}></i>
+                        <li key={file.id || file.nom} style={{ marginBottom: 4 }}>
+                          <a href={file.url} target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline', fontWeight: 600 }}>
+                            <i className="fas fa-file-alt" style={{ marginRight: 6 }}></i>{file.nom || file.filename || 'Fichier'}
                           </a>
                         </li>
                       ))}

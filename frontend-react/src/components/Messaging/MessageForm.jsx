@@ -15,10 +15,7 @@ const MessageForm = ({ conversationId, onSend, isTyping }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!contenu.trim()) return;
-    if (!conversationId) {
-      alert("Aucune conversation sélectionnée. Veuillez choisir une conversation avant d'envoyer un message.");
-      return;
-    }
+    
     setSending(true);
     try {
       const params = new URLSearchParams({
@@ -36,13 +33,8 @@ const MessageForm = ({ conversationId, onSend, isTyping }) => {
         const saved = await res.json();
         onSend(saved);
         setContenu('');
-      } else if (res.status === 404) {
-        alert("La conversation n'existe pas ou a été supprimée.");
-      } else {
-        alert("Erreur lors de l'envoi du message. Veuillez réessayer.");
       }
     } catch (error) {
-      alert("Erreur réseau ou serveur.");
       console.error('Erreur lors de l\'envoi:', error);
     } finally {
       setSending(false);

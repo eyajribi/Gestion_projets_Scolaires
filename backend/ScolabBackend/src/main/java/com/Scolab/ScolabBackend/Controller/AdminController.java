@@ -3,6 +3,9 @@ package com.Scolab.ScolabBackend.Controller;
 import com.Scolab.ScolabBackend.Entity.Utilisateur;
 import com.Scolab.ScolabBackend.Entity.Role;
 import com.Scolab.ScolabBackend.Service.UtilisateurService;
+import com.Scolab.ScolabBackend.Service.ProjetService;
+import com.Scolab.ScolabBackend.Entity.Projet;
+import com.Scolab.ScolabBackend.Dto.UtilisateurDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,28 +16,33 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminController {
     private final UtilisateurService utilisateurService;
+    private final ProjetService projetService;
 
     // CRUD utilisateurs (tous rôles)
     @GetMapping("/utilisateurs")
-    public ResponseEntity<List<Utilisateur>> getAllUtilisateurs() {
-        return ResponseEntity.ok(utilisateurService.getAllUtilisateurs());
+    public ResponseEntity<List<UtilisateurDTO>> getAllUtilisateurs() {
+        List<Utilisateur> users = utilisateurService.getAllUtilisateurs();
+        List<UtilisateurDTO> dtos = users.stream().map(UtilisateurDTO::new).toList();
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/utilisateurs/{id}")
-    public ResponseEntity<Utilisateur> getUtilisateur(@PathVariable String id) {
+    public ResponseEntity<UtilisateurDTO> getUtilisateur(@PathVariable String id) {
         return utilisateurService.getUtilisateurById(id)
-                .map(ResponseEntity::ok)
+                .map(user -> ResponseEntity.ok(new UtilisateurDTO(user)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/utilisateurs")
-    public ResponseEntity<Utilisateur> createUtilisateur(@RequestBody Utilisateur utilisateur) {
-        return ResponseEntity.ok(utilisateurService.createUtilisateur(utilisateur));
+    public ResponseEntity<UtilisateurDTO> createUtilisateur(@RequestBody Utilisateur utilisateur) {
+        Utilisateur created = utilisateurService.createUtilisateur(utilisateur);
+        return ResponseEntity.ok(new UtilisateurDTO(created));
     }
 
     @PutMapping("/utilisateurs/{id}")
-    public ResponseEntity<Utilisateur> updateUtilisateur(@PathVariable String id, @RequestBody Utilisateur utilisateur) {
-        return ResponseEntity.ok(utilisateurService.updateUtilisateur(id, utilisateur));
+    public ResponseEntity<UtilisateurDTO> updateUtilisateur(@PathVariable String id, @RequestBody Utilisateur utilisateur) {
+        Utilisateur updated = utilisateurService.updateUtilisateur(id, utilisateur);
+        return ResponseEntity.ok(new UtilisateurDTO(updated));
     }
 
     @DeleteMapping("/utilisateurs/{id}")
@@ -45,8 +53,9 @@ public class AdminController {
 
     // Gestion des rôles
     @PutMapping("/utilisateurs/{id}/role")
-    public ResponseEntity<Utilisateur> updateRole(@PathVariable String id, @RequestBody Role role) {
-        return ResponseEntity.ok(utilisateurService.updateRole(id, role));
+    public ResponseEntity<UtilisateurDTO> updateRole(@PathVariable String id, @RequestBody Role role) {
+        Utilisateur updated = utilisateurService.updateRole(id, role);
+        return ResponseEntity.ok(new UtilisateurDTO(updated));
     }
 
     // Dashboard admin (statistiques)
@@ -60,5 +69,17 @@ public class AdminController {
     public ResponseEntity<List<String>> getSystemLogs() {
         // À implémenter : lecture des logs système
         return ResponseEntity.ok(List.of("Log système non implémenté"));
+    }
+
+    // Statistiques détaillées de tous les projets
+    @GetMapping("/projets/stats")
+    public ResponseEntity<List<Projet.ProjetStats>> getStatsTousProjets() {
+        return ResponseEntity.ok(projetService.getStatistiquesTousProjets());
+    }
+
+    // Statistiques détaillées des projets d'un enseignant
+    @GetMapping("/projets/stats/{enseignantId}")
+    public ResponseEntity<List<Projet.ProjetStats>> getStatsProjetsParEnseignant(@PathVariable String enseignantId) {
+        return ResponseEntity.ok(projetService.getStatistiquesProjetsParEnseignant(enseignantId));
     }
 }

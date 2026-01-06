@@ -99,4 +99,25 @@ public class Projet {
             calculerAvancement();
         }
     }
+
+    public ProjetStats getStatistiquesProjet() {
+        int totalTaches = taches != null ? taches.size() : 0;
+        int tachesTerminees = taches != null ? (int) taches.stream().filter(t -> t.getStatut() == StatutTache.TERMINEE).count() : 0;
+        int tachesEnRetard = getTachesEnRetard().size();
+        double avancement = this.pourcentageAvancement != null ? this.pourcentageAvancement : 0.0;
+        return new ProjetStats(totalTaches, tachesTerminees, tachesEnRetard, avancement);
+    }
+
+    public static class ProjetStats {
+        public int totalTaches;
+        public int tachesTerminees;
+        public int tachesEnRetard;
+        public double avancement;
+        public ProjetStats(int totalTaches, int tachesTerminees, int tachesEnRetard, double avancement) {
+            this.totalTaches = totalTaches;
+            this.tachesTerminees = tachesTerminees;
+            this.tachesEnRetard = tachesEnRetard;
+            this.avancement = avancement;
+        }
+    }
 }

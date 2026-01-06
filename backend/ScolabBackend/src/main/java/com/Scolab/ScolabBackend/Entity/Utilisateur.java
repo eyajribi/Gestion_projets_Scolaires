@@ -94,6 +94,9 @@ public class Utilisateur implements UserDetails {
     // Méthodes UserDetails
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (role == null) {
+            return Collections.emptyList();
+        }
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 

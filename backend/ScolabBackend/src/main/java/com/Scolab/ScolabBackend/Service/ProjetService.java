@@ -190,4 +190,22 @@ public class ProjetService {
         projet.setDateArchivage(null);
         return projetRepository.save(projet);
     }
+
+    public List<Projet.ProjetStats> getStatistiquesTousProjets() {
+        List<Projet> projets = projetRepository.findAll();
+        return projets.stream()
+                .map(Projet::getStatistiquesProjet)
+                .collect(Collectors.toList());
+    }
+
+    public List<Projet.ProjetStats> getStatistiquesProjetsParEnseignant(String enseignantId) {
+        Utilisateur enseignant = utilisateurRepository.findById(enseignantId)
+                .orElseThrow(() -> new RuntimeException("Enseignant non trouvé avec ID: " + enseignantId));
+        List<Projet> projets = projetRepository.findAll().stream()
+                .filter(p -> p.getEnseignant() != null && enseignantId.equals(p.getEnseignant().getId()))
+                .collect(Collectors.toList());
+        return projets.stream()
+                .map(Projet::getStatistiquesProjet)
+                .collect(Collectors.toList());
+    }
 }
