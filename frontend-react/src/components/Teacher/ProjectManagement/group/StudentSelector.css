@@ -1,0 +1,202 @@
+/* StudentSelector.css - Respecte le thème global dark/light */
+/* Conteneur principal du sélecteur d'étudiants */
+.student-selector {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+/* En-tête */
+.student-selector .selector-header {
+  background: transparent;
+  padding: 0 0 1rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.student-selector .header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.selector-header h3,
+.selector-header .header-title {
+  color: var(--text-primary);
+}
+
+.selector-header .header-subtitle {
+  color: var(--text-secondary);
+}
+
+.header-stats {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.header-stats .stat-value {
+  color: var(--primary);
+}
+
+.header-stats .stat-label {
+  color: var(--text-secondary);
+}
+
+.header-stats .stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  font-size: 0.75rem;
+}
+
+.header-stats .stat-item.highlight {
+  border-color: var(--primary);
+}
+
+/* Barre de recherche */
+.search-section {
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.students-list .student-item {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  transition: background 0.2s;
+}
+
+.students-list .student-item.selected {
+  background: var(--info-light);
+}
+
+.students-list .student-item.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.student-avatar .avatar-placeholder {
+  background: var(--primary);
+  color: var(--white);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.student-info .student-name {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.student-info .student-email {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.student-meta {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.status-badge {
+  border-radius: 12px;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-left: 1rem;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-left: 8px;
+}
+
+.btn-select {
+  background: var(--info-dark);
+  color: var(--white);
+  border-radius: var(--radius-md);
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-left: 1rem;
+}
+
+.btn-select.selecting {
+  background: var(--success-dark);
+}
+
+.disabled-state {
+  color: var(--danger-dark);
+  font-size: 0.9rem;
+  margin-left: 1rem;
+}
+
+.selection-feedback {
+  color: var(--success-dark);
+  font-weight: 600;
+}
+
+.selection-loading {
+  margin-left: 1rem;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 2rem 1rem;
+}
+
+.empty-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--text-muted);
+}
+
+.status-legend {
+  margin-top: 2rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.status-legend .legend-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.legend-color.disponible {
+  background: var(--success-dark);
+}
+.legend-color.inactif {
+  background: var(--danger-dark);
+}
+.legend-color.surcharge {
+  background: var(--warning-dark);
+}
+.legend-color.occupe {
+  background: var(--info-dark);
+}

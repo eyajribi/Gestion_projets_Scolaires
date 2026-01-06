@@ -1,0 +1,236 @@
+/* ProgressChart.css */
+.progress-chart-simple,
+.progress-chart-detailed {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.progress-chart-simple .chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.progress-chart-simple .chart-header h4 {
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.progress-text {
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 0.9rem;
+}
+
+.progress-chart-simple .chart-content {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.pie-chart-container {
+  flex: 1;
+  max-width: 200px;
+}
+
+.chart-legend {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.legend-label {
+  color: var(--text-primary);
+  min-width: 80px;
+}
+
+.legend-value {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* Barre de progression */
+.progress-bar-container {
+  margin-top: 1.5rem;
+}
+
+.progress-bar-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* Vue détaillée */
+.progress-chart-detailed .chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.progress-chart-detailed .chart-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+}
+
+.progress-chart-detailed .chart-card h4 {
+  margin: 0 0 1rem 0;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.progress-chart-detailed .chart-card.full-width {
+  grid-column: 1 / -1;
+}
+
+.chart-container {
+  height: 300px;
+}
+
+.progress-chart-detailed .chart-card.full-width .chart-container {
+  height: 400px;
+}
+
+/* Pourcentage au centre du graphique circulaire */
+.progress-percentage {
+  font-size: 1.5rem;
+  font-weight: 700;
+  fill: var(--text-primary);
+}
+
+/* Carte de statistiques */
+.stats-card {
+  grid-column: 1 / -1;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+}
+
+.stats-card h4 {
+  margin: 0 0 1.5rem 0;
+  color: var(--text-primary);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.metric-item {
+  text-align: center;
+  padding: 1rem;
+  background: var(--card-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+.metric-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* Tooltip personnalisé */
+.custom-tooltip {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  box-shadow: var(--shadow-md);
+}
+
+.tooltip-content {
+  font-size: 0.875rem;
+}
+
+.tooltip-label {
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: var(--text-primary);
+}
+
+.tooltip-item {
+  margin: 0.25rem 0;
+  font-size: 0.8rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .progress-chart-detailed .chart-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .progress-chart-detailed .chart-card.full-width {
+    grid-column: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .progress-chart-simple .chart-content {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .pie-chart-container {
+    max-width: 100%;
+  }
+  
+  .chart-legend {
+    width: 100%;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .progress-chart-simple,
+  .progress-chart-detailed {
+    padding: 1rem;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}

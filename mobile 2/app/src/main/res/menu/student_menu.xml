@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_profile"
+        android:icon="@drawable/ic_profile"
+        android:title="Mon Profil"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@drawable/ic_settings"
+        android:title="Paramètres"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_logout"
+        android:icon="@drawable/ic_logout"
+        android:title="Déconnexion"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_livrables"
+        android:icon="@drawable/ic_livrables"
+        android:title="Livrables"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_feedbacks"
+        android:icon="@drawable/ic_feedbacks"
+        android:title="Feedbacks"
+        app:showAsAction="never" />
+</menu>

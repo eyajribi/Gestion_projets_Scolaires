@@ -1,0 +1,59 @@
+/* Bouton flottant global pour le changement de thème (dark / light) */
+
+.theme-toggle-fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1001;
+  background: var(--card-bg);
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 12px 0 rgba(15, 23, 42, 0.25);
+  transition: background 0.2s ease, border 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, color 0.2s ease;
+  outline: none;
+}
+
+.theme-toggle-fab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.theme-toggle-fab:hover {
+  background: var(--accent);
+  color: #ffffff;
+  transform: rotate(18deg) scale(1.06);
+  box-shadow: 0 6px 20px 0 rgba(15, 23, 42, 0.35);
+}
+
+.theme-toggle-fab .theme-toggle-icon {
+  font-size: 1.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, filter 0.2s ease;
+}
+
+.theme-toggle-fab.light .theme-toggle-icon {
+  color: #fbbf24;
+  filter: drop-shadow(0 1px 4px #fbbf24cc);
+}
+
+.theme-toggle-fab.dark .theme-toggle-icon {
+  color: #38bdf8;
+  filter: drop-shadow(0 1px 4px #38bdf8cc);
+}
+
+@media (max-width: 640px) {
+  .theme-toggle-fab {
+    bottom: 14px;
+    right: 14px;
+    width: 46px;
+    height: 46px;
+  }
+}

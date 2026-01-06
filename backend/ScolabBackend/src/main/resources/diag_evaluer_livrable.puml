@@ -1,0 +1,53 @@
+@startuml
+left to right direction
+
+actor Utilisateur
+actor "Enseignant" as Teacher
+Teacher -up-|> Utilisateur
+
+rectangle {
+  usecase "S'authentifier" as UC1
+
+  usecase "Gérer les projets" as UC10
+  usecase "Affecter étudiants" as UC10b
+
+  usecase "Visualiser l'avancement groupes" as UC12
+  usecase "Générer rapports" as UC12c
+
+  usecase "Attribuer les tâches" as UC14
+  usecase "Définir échéances" as UC14a
+  usecase "Assigner aux étudiants" as UC14b
+  usecase "Modifier priorités" as UC14c
+
+  ' Ajouts pour la conformité backend
+  usecase "Évaluer les livrables" as UC16
+  usecase "Consulter l'historique des évaluations" as UC17
+  usecase "Exporter les évaluations" as UC18
+  usecase "Notifier l'étudiant (évaluation)" as UC19
+}
+
+' Connexions de l'acteur Enseignant
+Teacher --> UC10
+Teacher --> UC12
+Teacher --> UC14
+Teacher --> UC16
+Teacher --> UC17
+Teacher --> UC18
+
+' Relations d'inclusion et d'extension
+UC10 ..> UC1 : <<include>>
+UC10 ..> UC10b : <<include>>
+
+UC12 ..> UC1 : <<include>>
+UC12 <.. UC12c : <<extend>>
+
+UC14 ..> UC1 : <<include>>
+UC14 ..> UC14a : <<include>>
+UC14 ..> UC14b : <<include>>
+UC14 <.. UC14c : <<extend>>
+
+UC16 ..> UC1 : <<include>>
+UC17 ..> UC16 : <<include>>
+UC18 ..> UC16 : <<include>>
+UC16 ..> UC19 : <<include>>
+@enduml

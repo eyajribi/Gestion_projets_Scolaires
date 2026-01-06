@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <title>Nouveau dépôt de livrable</title>
+</head>
+<body>
+<div>
+    <h2>Nouveau dépôt de livrable</h2>
+    <p>Bonjour <strong th:text="${enseignantPrenom}"></strong> <strong th:text="${enseignantNom}"></strong>,</p>
+    <p>Le groupe <strong th:text="${groupeNom}"></strong> vient de déposer un nouveau livrable pour le projet <strong th:text="${projetNom}"></strong>.</p>
+    <p>Nom du livrable : <strong th:text="${livrableNom}"></strong></p>
+    <p>Date de soumission : <span th:text="${dateSoumission}"></span></p>
+    <p>Vous pouvez consulter ce livrable sur la plateforme.</p>
+    <p>Cordialement,<br/>L'équipe EtudProject</p>
+</div>
+</body>
+</html>
+

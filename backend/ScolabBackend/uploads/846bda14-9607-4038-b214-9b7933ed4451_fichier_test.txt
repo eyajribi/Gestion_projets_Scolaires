@@ -1,0 +1,7 @@
+Ceci est un fichier de test pour l'insertion automatique de livrables.
+Chaque livrable inséré utilisera ce contenu.
+
+- Livrable exemple 1
+- Livrable exemple 2
+- Livrable exemple 3
+

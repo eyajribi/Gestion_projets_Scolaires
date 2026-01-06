@@ -1,0 +1,781 @@
+.projectlist-modern {
+  background: var(--glass);
+  border-radius: 22px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+  padding: 0.7rem 0.4rem 0.4rem 0.4rem;
+  margin-bottom: 0.7rem;
+  min-height: 50vh;
+  backdrop-filter: blur(8px);
+  border: 1.5px solid var(--glass-border);
+  transition: box-shadow 0.3s, background 0.3s;
+}
+
+.page-header {
+  background: rgba(255,255,255,0.07);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.05);
+  padding: 0.3rem 0.3rem 0.2rem 0.3rem;
+  margin-bottom: 0.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.3rem;
+}
+.stats-grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  font-weight: 600;
+  font-size: 0.95em;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.items-grid.modern-grid {
+  gap: 0.15rem;
+}
+.empty-state.modern-empty {
+  padding: 0.5rem 0.2rem;
+  background: rgba(255,255,255,0.10);
+  border-radius: 10px;
+  box-shadow: none;
+  margin-top: 0.2rem;
+  border: none;
+}
+@media (min-width: 900px) {
+  .page-header, .filters-section.sticky-filters {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.2rem;
+  }
+  .stats-collapsible, .stats-grid {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.2rem;
+  }
+}
+/* Optimisation avancée UI/UX ProjectList */
+.management-container.projectlist-modern {
+  background: var(--bg-main);
+  border-radius: 18px;
+  box-shadow: var(--shadow-md);
+  padding: 1.2rem 0.7rem 0.7rem 0.7rem;
+  margin-bottom: 1.2rem;
+  min-height: 55vh;
+}
+
+.stats-collapsible {
+  margin-bottom: 1rem;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  padding: 0.7rem 0.3rem;
+  border: 1px solid var(--border-color);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #e0e7ef 70%, #c7d2fe 100%);
+  border-radius: 14px;
+  box-shadow: 0 2px 12px 0 rgba(31, 38, 135, 0.13);
+  padding: 1.1rem 0.8rem 0.9rem 0.8rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 110px;
+  transition: box-shadow 0.2s, transform 0.2s;
+  border: 1.5px solid #a5b4fc;
+  margin: 0.1rem 0.1rem;
+}
+
+.stat-card .stat-number {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.15rem;
+  letter-spacing: 0.2px;
+  line-height: 1.1;
+}
+
+.stat-card .stat-label {
+  font-size: 1rem;
+  color: #334155;
+  font-weight: 500;
+  margin-top: 0.05rem;
+  letter-spacing: 0.01em;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.filters-section.sticky-filters {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg-main);
+  border-radius: 10px;
+  box-shadow: var(--shadow-xs);
+  padding: 0.5rem 0.2rem;
+  margin-bottom: 0.7rem;
+}
+
+.items-grid.modern-grid {
+  gap: 0.5rem;
+}
+
+.empty-state.modern-empty {
+  padding: 1.5rem 0.7rem;
+  background: var(--card-bg);
+  border-radius: 14px;
+  box-shadow: var(--shadow-xs);
+  margin-top: 0.7rem;
+}
+/* Conteneur principal de la page projet */
+.project-list-page {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  margin-bottom: 2rem;
+}
+.badge-planifie {
+  background: #e0f2fe;
+  color: #0284c7;
+  border-radius: 8px;
+  padding: 0.2em 0.7em;
+  font-weight: 600;
+  font-size: 1.1em;
+}
+.badge-encours {
+  background: #fef9c3;
+  color: #ca8a04;
+  border-radius: 8px;
+  padding: 0.2em 0.7em;
+  font-weight: 600;
+  font-size: 1.1em;
+}
+.badge-termine {
+  background: #dcfce7;
+  color: #16a34a;
+  border-radius: 8px;
+  padding: 0.2em 0.7em;
+  font-weight: 600;
+  font-size: 1.1em;
+}
+.badge-annule {
+  background: #fee2e2;
+  color: #dc2626;
+  border-radius: 8px;
+  padding: 0.2em 0.7em;
+  font-weight: 600;
+  font-size: 1.1em;
+}
+.animated-stats .stat-card {
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.animated-stats .stat-card:hover {
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  transform: scale(1.04);
+}
+/* En-tête */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+.header-content h1 {
+  margin: 0;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.header-content p {
+  margin: 0.5rem 0 0 0;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+.filters-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filters-left {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex: 1;
+}
+
+.filters-right {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Petit lien texte pour "Voir les groupes" sur les cartes projet */
+.link-button {
+  margin-left: 0.5rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--primary);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.link-button:hover {
+  color: var(--primary-dark, #1d4ed8);
+}
+
+/* Contrôles de vue */
+.view-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.view-controls label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.view-buttons {
+  display: flex;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Toggle Actifs / Archivés avec compteurs */
+.scope-toggle {
+  display: inline-flex;
+  align-items: center;
+  background: var(--card-bg);
+  border-radius: 999px;
+  padding: 0.1rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-xs);
+}
+
+.scope-toggle .scope-btn {
+  position: relative;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.1s ease;
+}
+
+.scope-toggle .scope-btn .count-pill {
+  min-width: 1.4rem;
+  height: 1.1rem;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.15);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.scope-toggle .scope-btn.active {
+  background: var(--primary-light, #e0f2fe);
+  color: var(--primary-dark, #1d4ed8);
+  transform: translateY(-0.5px);
+}
+
+.scope-toggle .scope-btn.active .count-pill {
+  background: var(--primary, #2563eb);
+  color: #ffffff;
+}
+
+.scope-toggle .scope-btn:not(.active):hover {
+  background: rgba(148, 163, 184, 0.12);
+}
+
+.view-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.view-btn:hover {
+  background: var(--bg-hover);
+  color: var(--primary);
+}
+
+.view-btn.active {
+  background: var(--primary);
+  color: white;
+}
+
+/* Status filters */
+.status-filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.status-filter {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-secondary);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.status-filter:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.status-filter.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-group label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* Résultats */
+.results-info {
+  margin-bottom: 2rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* Contenu des projets */
+.projects-content.grid {
+  /* Style par défaut pour la grille */
+}
+
+.projects-content.calendar {
+  /* Style spécifique pour le calendrier */
+}
+
+/* Grille des projets */
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Version liste compacte */
+.items-grid.list {
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.items-grid.list .project-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.items-grid.list .project-header {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.items-grid.list .project-description,
+.items-grid.list .project-meta,
+.items-grid.list .recent-tasks {
+  display: none;
+}
+
+.items-grid.list .project-progress {
+  margin-bottom: 0;
+  min-width: 200px;
+}
+
+.items-grid.list .project-actions {
+  align-self: center;
+}
+
+/* Carte de projet */
+.project-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: var(--transition);
+  cursor: pointer;
+  position: relative;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary);
+}
+
+.project-card.late {
+  border-left: 4px solid var(--danger);
+}
+
+.project-card.compact {
+  padding: 1rem;
+}
+
+.project-card.compact .project-description {
+  display: none;
+}
+
+/* En-tête de projet */
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.project-title-section {
+  flex: 1;
+  min-width: 0;
+}
+
+.project-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.project-actions {
+  position: relative;
+}
+
+/* Dropdown */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.5rem;
+  min-width: 200px;
+  box-shadow: var(--shadow-lg);
+  z-index: 10;
+  display: none;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: var(--transition);
+  font-size: 0.9rem;
+}
+
+.dropdown-item:hover {
+  background: var(--bg-hover);
+}
+
+.dropdown-item.text-danger {
+  color: var(--danger);
+}
+
+.dropdown-item.text-danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 0.5rem 0;
+}
+
+/* Description */
+.project-description {
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Métadonnées */
+.project-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.meta-item i {
+  width: 16px;
+  text-align: center;
+}
+
+/* Progression */
+/* Modernized Project Card */
+.project-card.modernized {
+  background: #fff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 2rem;
+  transition: box-shadow 0.2s, border 0.2s;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 4px 24px 0 rgba(31,38,135,0.10);
+  margin-bottom: 18px;
+}
+.project-card.modernized:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+  border-color: #2563eb;
+}
+.project-card.modernized.late {
+  border-left: 4px solid var(--danger);
+}
+.project-card.modernized.compact {
+  padding: 1rem;
+}
+.project-card.modernized.compact .project-description {
+  display: none;
+}
+
+/* Modern button styles for project card */
+.modern-btn {
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 0.5rem 1.4rem;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 8px #3b82f622;
+  border: 1.5px solid #3b82f6;
+  color: #2563eb;
+  background: #f8fafc;
+  transition: background 0.2s, color 0.2s;
+}
+.modern-btn:hover {
+  background: #e0e7ef;
+}
+
+
+.tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: var(--transition);
+}
+
+.task-item:hover {
+  background: var(--bg-hover);
+}
+
+.task-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.task-title {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.task-more {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 0.5rem;
+}
+
+/* Alertes */
+.project-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.project-warning {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* État vide */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-secondary);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.empty-state h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-primary);
+}
+
+.empty-state p {
+  margin: 0 0 1.5rem 0;
+  color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .projects-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .project-list-page {
+    padding: 0.5rem;
+  }
+
+  .page-header {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+    padding-bottom: 0.5rem;
+  }
+
+  .filters-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .filters-left {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .filters-right {
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .view-controls {
+    justify-content: center;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .project-actions {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .status-filters {
+    justify-content: center;
+  }
+  
+  .status-filter {
+    flex: 1;
+    text-align: center;
+    min-width: 80px;
+  }
+}

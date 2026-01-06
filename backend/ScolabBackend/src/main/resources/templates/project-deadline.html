@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rappel d'échéance de projet</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #ff9800 0%, #f44336 100%);
+            color: white;
+            padding: 24px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 600;
+        }
+        .content {
+            padding: 32px 28px;
+            background-color: #f9f9f9;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            padding: 16px;
+            background: #f1f1f1;
+        }
+        .project-info {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 16px 18px;
+            border: 1px solid #e0e0e0;
+            margin-top: 12px;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 12px 14px;
+            margin-top: 16px;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Rappel d'échéance de projet</h1>
+    </div>
+    <div class="content">
+        <p>Bonjour <strong><span th:text="${prenom}"></span> <span th:text="${nom}"></span></strong>,</p>
+
+        <p>Ceci est un rappel concernant l'échéance du projet suivant :</p>
+        <div class="project-info">
+            <p><strong>Intitulé :</strong> <span th:text="${projet.nom}"></span></p>
+            <p><strong>Date de fin :</strong> <span th:text="${projet.dateFin}"></span></p>
+        </div>
+
+        <div class="warning">
+            <strong>Important :</strong> Pensez à finaliser vos livrables avant la date limite.
+        </div>
+
+        <p style="margin-top:24px;">Cordialement,<br/>L'équipe EduProject</p>
+    </div>
+    <div class="footer">
+        <p>© 2024 EduProject. Tous droits réservés.</p>
+    </div>
+</div>
+</body>
+</html>

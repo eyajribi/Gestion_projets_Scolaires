@@ -1,0 +1,56 @@
+/* Style pour le bouton supprimer (hover) */
+.btn-delete-task:hover {
+  background: #fee2e2 !important;
+  color: #b91c1c !important;
+  border-color: #f87171 !important;
+  box-shadow: 0 4px 16px #fca5a599 !important;
+}
+.task-group-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  background: #f1f5f9;
+  color: #2563eb;
+  border-radius: 8px;
+  padding: 2px 8px;
+  font-size: 0.85em;
+  margin-left: 6px;
+  font-weight: 600;
+}
+
+.assignee-group-label {
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7em;
+  color: #2563eb;
+  background: #f1f5f9;
+  border-radius: 6px;
+  padding: 1px 6px;
+  margin-top: 2px;
+  white-space: nowrap;
+  z-index: 2;
+  box-shadow: 0 1px 4px #0001;
+}
+
+.task-badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+/* Ajouter à TaskList.css */
+.task-project {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.task-project i {
+  font-size: 0.7rem;
+}

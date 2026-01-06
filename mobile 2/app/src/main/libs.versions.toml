@@ -1,0 +1,13 @@
+toml
+[versions]
+# ... (existing versions)firebaseBom = "34.1.0"
+googleServicesPlugin = "4.4.2"
+
+[libraries]
+# ... (existing libraries)
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+# The firestore-ktx dependency is correct
+
+[plugins]
+# ... (existing plugins)
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServicesPlugin" }

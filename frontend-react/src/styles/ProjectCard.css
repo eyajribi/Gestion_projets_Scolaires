@@ -1,0 +1,57 @@
+.project-card.modernized {
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: 0 4px 24px 0 rgba(31,38,135,0.10);
+  border: 1.5px solid #e5e7eb;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 100%;
+  word-break: break-word;
+}
+
+.project-card.modernized .project-header,
+.project-card.modernized .project-title-section {
+  min-width: 0;
+}
+
+.project-card.modernized .project-title {
+  white-space: pre-line;
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.project-card.modernized .project-description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.project-card.modernized .meta-item {
+  min-width: 0;
+  word-break: break-word;
+}
+
+.project-card.modernized .recent-tasks .task-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 180px;
+  display: inline-block;
+}
+
+@media (max-width: 600px) {
+  .project-card.modernized {
+    padding: 1rem;
+    font-size: 0.95rem;
+  }
+  .project-card.modernized .project-title {
+    font-size: 1.1rem;
+  }
+}
