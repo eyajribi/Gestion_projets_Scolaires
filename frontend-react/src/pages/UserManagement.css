@@ -1,0 +1,44 @@
+.user-management {
+  padding: 2rem;
+  max-width: 900px;
+  margin: auto;
+}
+.user-management h1 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+.user-management table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+}
+.user-management th, .user-management td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+}
+.user-management th {
+  background: #f0f0f0;
+}
+.user-management button {
+  margin-right: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: #007bff;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.user-management button:last-child {
+  background: #dc3545;
+}
+@media (max-width: 600px) {
+  .user-management table, .user-management thead, .user-management tbody, .user-management th, .user-management td, .user-management tr {
+    display: block;
+    width: 100%;
+  }
+  .user-management th, .user-management td {
+    box-sizing: border-box;
+    padding: 1rem;
+  }
+}

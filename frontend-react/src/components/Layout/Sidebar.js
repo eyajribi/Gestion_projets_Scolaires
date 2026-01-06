@@ -23,13 +23,18 @@ const Sidebar = ({ activeView, onNavigate, getTotalTasksCount, getDelayedTasksCo
   const mainNavigation = [
     { id: "dashboard", label: "Tableau de bord", icon: "fas fa-tachometer-alt" },
     { id: "projects", label: "Projets", icon: "fas fa-project-diagram" },
-    // Utilise l'identifiant "all-tasks" pour correspondre à la vue interne
     { id: "all-tasks", label: "Tâches", icon: "fas fa-tasks", badge: true },
     { id: "deliverables", label: "Livrables", icon: "fas fa-file-upload" },
     { id: "groups", label: "Groupes", icon: "fas fa-users" },
     { id: "statistics", label: "Statistiques", icon: "fas fa-chart-bar" },
     { id: "deadlines-calendar", label: "Calendrier des échéances", icon: "fas fa-calendar-alt" },
     { id: "messaging", label: "Messagerie", icon: "fas fa-comments" },
+  ];
+
+  // Admin navigation links
+  const adminNavigation = [
+    { id: "admin-dashboard", label: "Admin Dashboard", icon: "fas fa-user-shield" },
+    { id: "admin-users", label: "Gestion Utilisateurs", icon: "fas fa-users-cog" },
   ];
 
   return (
@@ -48,7 +53,8 @@ const Sidebar = ({ activeView, onNavigate, getTotalTasksCount, getDelayedTasksCo
       <nav className="sidebar-nav">
         <div className="sidebar-section">
           <ul>
-            {mainNavigation.map((item) => (
+            {/* Only show teacher links for non-admin users */}
+            {user?.role !== "ADMIN" && mainNavigation.map((item) => (
               <li key={item.id}>
                 <button
                   className={`sidebar-link${activeView === item.id ? " active" : ""}`}
@@ -66,11 +72,31 @@ const Sidebar = ({ activeView, onNavigate, getTotalTasksCount, getDelayedTasksCo
                 </button>
               </li>
             ))}
+            {/* Only show admin links for admin users */}
+            {user?.role === "ADMIN" && adminNavigation.map((item) => (
+              <li key={item.id}>
+                <button
+                  className={`sidebar-link${activeView === item.id ? " active" : ""}`}
+                  onClick={() => {
+                    if (item.id === "admin-dashboard") {
+                      window.location.href = "/admin/dashboard";
+                    } else if (item.id === "admin-users") {
+                      window.location.href = "/admin/users";
+                    }
+                  }}
+                >
+                  <span className="sidebar-link-indicator" aria-hidden="true" />
+                  <i className={item.icon}></i>
+                  <span className="sidebar-link-label">{item.label}</span>
+                </button>
+              </li>
+            ))}
           </ul>
         </div>
 
         <div className="sidebar-section sidebar-section-account">
           <ul>
+            {/* Allow all users, including admin, to access profile */}
             <li>
               <button
                 className={`sidebar-link${activeView === "profile" ? " active" : ""}`}

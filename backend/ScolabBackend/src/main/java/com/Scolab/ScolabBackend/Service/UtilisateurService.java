@@ -89,6 +89,50 @@ public class UtilisateurService {
                 .orElseThrow(() -> new RuntimeException("Enseignant non trouvé"));
     }
 
+    // CRUD utilisateurs (admin)
+    public List<Utilisateur> getAllUtilisateurs() {
+        return utilisateurRepository.findAll();
+    }
+
+    public Utilisateur createUtilisateur(Utilisateur utilisateur) {
+        utilisateur.setDateCreation(LocalDateTime.now());
+        utilisateur.setEstActif(true);
+        return utilisateurRepository.save(utilisateur);
+    }
+
+    public Utilisateur updateUtilisateur(String id, Utilisateur utilisateurModifie) {
+        return utilisateurRepository.findById(id)
+                .map(utilisateur -> {
+                    utilisateur.modifierProfil(utilisateurModifie);
+                    utilisateur.setRole(utilisateurModifie.getRole());
+                    utilisateur.setDateModification(LocalDateTime.now());
+                    return utilisateurRepository.save(utilisateur);
+                })
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+    }
+
+    public Utilisateur updateRole(String id, Role role) {
+        Utilisateur utilisateur = utilisateurRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        utilisateur.setRole(role);
+        utilisateur.setDateModification(LocalDateTime.now());
+        return utilisateurRepository.save(utilisateur);
+    }
+
+    // Dashboard admin (statistiques)
+    public Object getDashboardStats() {
+        long totalUtilisateurs = utilisateurRepository.count();
+        long totalEtudiants = utilisateurRepository.findAllEtudiants().size();
+        long totalEnseignants = utilisateurRepository.findAllEnseignants().size();
+        long totalActifs = utilisateurRepository.findByEstActif(true).size();
+        return java.util.Map.of(
+                "totalUtilisateurs", totalUtilisateurs,
+                "totalEtudiants", totalEtudiants,
+                "totalEnseignants", totalEnseignants,
+                "totalActifs", totalActifs
+        );
+    }
+
     public void deleteUtilisateur(String id) {
         utilisateurRepository.deleteById(id);
     }

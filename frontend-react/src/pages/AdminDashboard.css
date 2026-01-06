@@ -1,0 +1,26 @@
+.admin-dashboard {
+  padding: 2rem;
+  max-width: 900px;
+  margin: auto;
+}
+.admin-dashboard h1 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+.admin-dashboard section {
+  margin-bottom: 2rem;
+  background: #f8f8f8;
+  border-radius: 8px;
+  padding: 1rem;
+}
+.admin-dashboard pre {
+  background: #222;
+  color: #fff;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+.admin-dashboard ul {
+  list-style: disc inside;
+  padding-left: 1rem;
+}

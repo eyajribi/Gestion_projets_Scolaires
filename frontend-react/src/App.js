@@ -27,14 +27,37 @@ const TeacherProjectManagement = lazy(() =>
 const ResetPassword = lazy(() => import("./components/Auth/ResetPassword"));
 const ForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage"));
 const Unauthorized = lazy(() => import("./pages/Unauthorized"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const UserManagement = lazy(() => import("./pages/UserManagement"));
 
 function AppRoutes() {
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   return (
     <>
       <Routes>
+                        {/* Admin routes */}
+                        <Route
+                          path="/admin/dashboard"
+                          element={
+                            <ProtectedRoute requiredRole="ADMIN">
+                              <Suspense fallback={<LoadingSpinner />}>
+                                <AdminDashboard />
+                              </Suspense>
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/admin/users"
+                          element={
+                            <ProtectedRoute requiredRole="ADMIN">
+                              <Suspense fallback={<LoadingSpinner />}>
+                                <UserManagement />
+                              </Suspense>
+                            </ProtectedRoute>
+                          }
+                        />
             <>
               <Route
                 path="/deliverables"
@@ -230,7 +253,7 @@ function AppRoutes() {
               }
             />
           </Routes>
-      {isAuthenticated && location.pathname !== '/messaging' && <Footer />}
+      {isAuthenticated && location.pathname !== '/messaging' && user?.role !== 'ADMIN' && <Footer />}
     </>
   );
 }

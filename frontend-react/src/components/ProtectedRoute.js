@@ -23,8 +23,11 @@ const ProtectedRoute = ({ children, requiredRole }) => {
 
   // Vérification du rôle si spécifié
   if (requiredRole && user.role !== requiredRole) {
-    // Rediriger vers une page non autorisée ou le dashboard approprié
-    const redirectTo = user.role === 'ENSEIGNANT' ? '/teacher-dashboard' : '/student-app';
+    // Rediriger vers le dashboard approprié selon le rôle
+    let redirectTo = '/unauthorized';
+    if (user.role === 'ENSEIGNANT') redirectTo = '/teacher-dashboard';
+    else if (user.role === 'ADMIN') redirectTo = '/admin/dashboard';
+    else if (user.role === 'ETUDIANT') redirectTo = '/student-app';
     return <Navigate to={redirectTo} replace />;
   }
 
