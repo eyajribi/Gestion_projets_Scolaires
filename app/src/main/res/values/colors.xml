@@ -45,8 +45,15 @@
     <color name="success">#4CAF50</color>
     <color name="warning">#FF9800</color>
     <color name="error">@color/md_theme_light_error</color> <!-- #D32F2F -->
-
+    
+    <!-- Couleurs supplémentaires pour les statuts -->
+    <color name="purple_500">#9C27B0</color>
+    <color name="green_500">#4CAF50</color>
+    <color name="orange_500">#FF9800</color>
+    <color name="grey_500">#9E9E9E</color>
+    
     <!-- Autres couleurs génériques -->
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="blue">@color/md_theme_light_primary</color>
 </resources>

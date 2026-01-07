@@ -11,7 +11,6 @@
     <string name="continue_google">Continuer avec Google</string>
     <string name="continue_github">Continuer avec GitHub</string>
     <string name="no_account">Vous n\'avez pas de compte ? <font color="#00639C">Inscrivez-vous</font></string>
-
     <string name="register_title">Créer un compte</string>
     <string name="register_subtitle">Commencez votre parcours avec Scolab</string>
     <string name="register_button">S\'inscrire</string>
@@ -44,7 +43,7 @@
 
     <!-- ==================== General & Common Strings ==================== -->
     <string name="name_hint">Nom</string>
-    <string name="firstname_hint">Prénom</string> <!-- Ajouté -->
+    <string name="firstname_hint">Prénom</string>
     <string name="email_hint">Adresse e-mail</string>
     <string name="phone_hint">Numéro de téléphone</string>
     <string name="phone_helper">(Optionnel)</string>
@@ -86,8 +85,41 @@
     <string name="file_too_large">Le fichier est trop volumineux</string>
     <string name="logout_button">Se déconnecter</string>
 
-    <string name="appbar_scrolling_view_behavior">appbar_scrolling_view_behavior</string>
+    <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
     <string name="ic_arrow_back">ic_arrow_back</string>
     <string name="back_to_login">Retour à la connexion</string>
 
+    <!-- ==================== Dashboard ==================== -->
+    <string name="dashboard_quick_overview">Aperçu rapide</string>
+    <string name="dashboard_email_label">Email</string>
+    <string name="dashboard_phone_label">Téléphone</string>
+    <string name="dashboard_quick_access">Accès rapide</string>
+    <string name="dashboard_my_projects">Mes Projets</string>
+    <string name="dashboard_my_tasks">Mes Tâches</string>
+    <string name="dashboard_my_feedbacks">Mes Feedbacks</string>
+    <string name="dashboard_upcoming_deadlines">Échéances proches</string>
+    <string name="dashboard_no_deadlines">Aucune échéance proche</string>
+
+    <!-- ==================== Projects ==================== -->
+    <string name="projects_title">Projets</string>
+    <string name="projects_empty_message">Aucun projet à afficher</string>
+
+    <!-- ==================== Tasks ==================== -->
+    <string name="tasks_title">Mes Tâches</string>
+    <string name="tasks_empty_message">Aucune tâche à afficher</string>
+    <string name="task_submit_button">Déposer</string>
+
+    <!-- ==================== Feedbacks ==================== -->
+    <string name="feedbacks_title">Feedbacks</string>
+    <string name="feedback_reply_button">Répondre</string>
+    <string name="feedback_reply_label">Votre Réponse :</string>
+
+    <!-- ==================== Email Verification ==================== -->
+    <string name="email_verification_title">Vérification de l\'email</string>
+    <string name="email_verification_subtitle">Veuillez saisir le code de vérification reçu par email.</string>
+    <string name="email_verification_button">Vérifier</string>
+    <string name="aucun">aucun</string>
+
+    <string name="file_selected">Fichier sélectionné : %1$s</string>
+    <string name="no_file_selected">Aucun fichier sélectionné</string>
 </resources>

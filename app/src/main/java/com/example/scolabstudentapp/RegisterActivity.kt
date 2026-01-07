@@ -4,12 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
+import android.widget.Toast.LENGTH_SHORT
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.example.scolabstudentapp.LoginActivity
+import com.example.scolabstudentapp.StudentDashboardActivity
+import com.example.scolabstudentapp.api.RetrofitClient
 import com.example.scolabstudentapp.databinding.ActivityRegisterBinding
 import com.example.scolabstudentapp.viewmodels.RegisterResult
 import com.example.scolabstudentapp.viewmodels.RegisterViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RegisterActivity : AppCompatActivity() {
@@ -71,11 +79,68 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
 
-            registerViewModel.register(nom, prenom, email, password, numTel, nomFac, nomDep, niveau, filiere)
+            // Utiliser le nouveau backend pour l'inscription
+            registerWithBackend(nom, prenom, email, password, numTel, nomFac, listOf(nomDep), niveau, filiere)
         }
 
         binding.loginLink.setOnClickListener {
             finish()
+        }
+    }
+
+    private fun registerWithBackend(
+        nom: String,
+        prenom: String,
+        email: String,
+        password: String,
+        numTel: String,
+        nomFac: String,
+        nomDep: List<String>,
+        niveau: String,
+        filiere: String
+    ) {
+        lifecycleScope.launch {
+            try {
+                binding.registerButton.isEnabled = false
+                binding.progressBar.visibility = View.VISIBLE
+                
+                val registerRequest = com.example.scolabstudentapp.models.ReqRes(
+                    email = email,
+                    password = password,
+                    nom = nom,
+                    prenom = prenom,
+                    numTel = numTel,
+                    nomFac = nomFac,
+                    nomDep = nomDep,
+                    role = "ETUDIANT"
+                )
+                
+                val response = RetrofitClient.register(registerRequest)
+                
+                if (response.isSuccessful) {
+                    val registerResponse = response.body()
+                    if (registerResponse?.status == "success") {
+                        // Rediriger vers LoginActivity pour vérification email
+                        Toast.makeText(this@RegisterActivity, "Inscription réussie ! Veuillez vérifier votre email.", LENGTH_LONG).show()
+                        val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        binding.registerButton.isEnabled = true
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(this@RegisterActivity, "Erreur: ${registerResponse?.message}", LENGTH_LONG).show()
+                    }
+                } else {
+                    binding.registerButton.isEnabled = true
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(this@RegisterActivity, "Erreur d'inscription: ${response.code()}", LENGTH_LONG).show()
+                }
+            } catch (e: Exception) {
+                binding.registerButton.isEnabled = true
+                binding.progressBar.visibility = View.GONE
+                Toast.makeText(this@RegisterActivity, "Erreur réseau: ${e.message}", LENGTH_LONG).show()
+            }
         }
     }
 

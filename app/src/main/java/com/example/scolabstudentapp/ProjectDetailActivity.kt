@@ -3,76 +3,91 @@ package com.example.scolabstudentapp
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.scolabstudentapp.adapters.TaskAdapter
+import androidx.lifecycle.lifecycleScope
+import com.example.scolabstudentapp.api.RetrofitClient
 import com.example.scolabstudentapp.databinding.ActivityProjectDetailBinding
 import com.example.scolabstudentapp.models.Projet
-import com.example.scolabstudentapp.models.Tache
-import com.example.scolabstudentapp.viewmodels.ProjectDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProjectDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityProjectDetailBinding
-    private val viewModel: ProjectDetailViewModel by viewModels()
-
-    companion object {
-        const val EXTRA_PROJECT_ID = "EXTRA_PROJECT_ID"
-    }
+    private var projectId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProjectDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding.toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
+        projectId = intent.getStringExtra("PROJECT_ID")
 
-        val projectId = intent.getStringExtra(EXTRA_PROJECT_ID)
-        if (projectId == null) {
-            finish()
-            return
-        }
-
-        viewModel.loadProject(projectId)
-        setupObservers()
+        setupToolbar()
+        loadProjectFromBackend(projectId ?: "")
     }
 
-    private fun setupObservers() {
-        viewModel.project.observe(this) { project ->
-            binding.progressBar.visibility = if (project == null) View.VISIBLE else View.GONE
-            binding.contentGroup.visibility = if (project != null) View.VISIBLE else View.GONE
+    private fun setupToolbar() {
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding.toolbar.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+    }
 
-            if (project != null) {
-                populateProjectDetails(project)
-            } else {
-                // Optional: Show an error message
+    private fun loadProjectFromBackend(projectId: String) {
+        lifecycleScope.launch {
+            try {
+                binding.progressBar.visibility = View.VISIBLE
+                binding.contentGroup.visibility = View.GONE
+                binding.errorView.visibility = View.GONE
+
+                val response = RetrofitClient.getProjectDetails(projectId)
+
+                if (response.isSuccessful) {
+                    val project = response.body()
+                    if (project != null) {
+                        displayProjectDetails(project)
+                    } else {
+                        showError("Projet non trouvé")
+                    }
+                } else {
+                    showError("Erreur de chargement: ${response.code()}")
+                }
+
+            } catch (e: Exception) {
+                println("DEBUG: Erreur chargement projet: ${e.message}")
+                showError("Erreur de connexion: ${e.message}")
+            } finally {
+                binding.progressBar.visibility = View.GONE
             }
         }
     }
 
-    private fun populateProjectDetails(project: Projet) {
-        binding.toolbar.title = project.nom
-        // Les vues suivantes n'existent pas dans le layout : projectNameDetailText, projectDescriptionDetailText, projectProgressLinearIndicator, projectProgressDetailText, teacherNameDetailText, tasksRecyclerview
-        // On utilise les vues existantes : projectDescription, tasksRecyclerView
-        // Affichage du nom du projet dans la toolbar
-        // Affichage de la description
-        binding.projectDescription.text = project.description
-        // Affichage des tâches
-        binding.tasksRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.tasksRecyclerView.adapter = TaskAdapter { task: Tache ->
-            handleTaskAction(task)
+    private fun displayProjectDetails(project: Projet) {
+        binding.apply {
+            contentGroup.visibility = View.VISIBLE
+
+            projectTitle.text = project.nom
+            projectDescription.text = project.description ?: "Aucune description disponible"
+            projectStatus.text = project.statut?.toString() ?: "NON DÉFINI"
+            projectStartDate.text = project.dateDebut?.toString() ?: "Non définie"
+            projectEndDate.text = project.dateFin?.toString() ?: "Non définie"
         }
-        // Les autres informations (progression, enseignant) ne sont pas disponibles dans le layout ni le modèle
     }
 
-    private fun handleTaskAction(task: Tache) {
-        // This functionality needs to be adapted based on the Tache model
-        // and whether a submission URL is available.
-        Toast.makeText(this, "Task action for: ${task.titre}", Toast.LENGTH_SHORT).show()
+    private fun showError(message: String) {
+        binding.apply {
+            errorView.visibility = View.VISIBLE
+            errorText.text = message
+            contentGroup.visibility = View.GONE
+        }
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    }
+
+    companion object {
+        const val PROJECT_ID = "PROJECT_ID"
+        const val PROJECT_NAME = "PROJECT_NAME"
     }
 }

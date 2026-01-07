@@ -9,7 +9,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.scolabstudentapp.databinding.ActivityCalendarBinding
 import com.example.scolabstudentapp.api.RetrofitClient
 import com.example.scolabstudentapp.auth.AuthManager
+import com.example.scolabstudentapp.models.CalendarEvent
+import com.example.scolabstudentapp.adapters.CalendarEventsAdapter
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 import kotlinx.coroutines.launch
 
@@ -17,17 +23,24 @@ import kotlinx.coroutines.launch
 class CalendarActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCalendarBinding
+    private lateinit var calendarAdapter: CalendarEventsAdapter
+    private var calendarEvents: List<CalendarEvent> = emptyList()
     
     @Inject
     lateinit var authManager: AuthManager
+    private val gson = Gson()
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCalendarBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Données de test pour vérifier l'affichage
+        println("DEBUG: Initialisation de CalendarActivity")
+        
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.title = getString(R.string.calendar_title)
+        supportActionBar?.title = "Calendrier"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
@@ -44,21 +57,29 @@ class CalendarActivity : AppCompatActivity() {
     }
 
     private fun loadCalendarEvents() {
-        binding.progressBar.visibility = View.VISIBLE
-        
+        println("DEBUG: Chargement des événements du calendrier")
         lifecycleScope.launch {
             try {
-                // TODO: Implémenter l'appel API pour récupérer les événements du calendrier
-                // val response = RetrofitClient.apiService.getCalendarEvents()
+                binding.progressBar.visibility = View.VISIBLE
                 
-                // Pour l'instant, afficher un message
-                binding.emptyEventsText.visibility = View.VISIBLE
-                binding.emptyEventsText.text = "Aucun événement à afficher"
+                val response = RetrofitClient.getEtudiantCalendrier()
+                println("DEBUG: Réponse API calendrier: ${response.isSuccessful}")
+                
+                if (response.isSuccessful) {
+                    val eventsData = response.body()
+                    if (eventsData != null && eventsData.isNotEmpty()) {
+                        Toast.makeText(this@CalendarActivity, "${eventsData.size} événements calendrier trouvés", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@CalendarActivity, "Aucun événement trouvé", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    println("DEBUG: Erreur API calendrier: ${response.code()} - ${response.message()}")
+                    Toast.makeText(this@CalendarActivity, "Erreur de chargement: ${response.message()}", Toast.LENGTH_LONG).show()
+                }
                 
             } catch (e: Exception) {
-                Toast.makeText(this@CalendarActivity, "Erreur: ${e.message}", Toast.LENGTH_SHORT).show()
-                binding.emptyEventsText.visibility = View.VISIBLE
-                binding.emptyEventsText.text = getString(R.string.error_loading_data)
+                println("DEBUG: Exception calendrier: ${e.message}")
+                Toast.makeText(this@CalendarActivity, "Erreur réseau: ${e.message}", Toast.LENGTH_LONG).show()
             } finally {
                 binding.progressBar.visibility = View.GONE
             }
@@ -66,26 +87,17 @@ class CalendarActivity : AppCompatActivity() {
     }
 
     private fun loadEventsForDate(year: Int, month: Int, dayOfMonth: Int) {
-        binding.progressBar.visibility = View.VISIBLE
+        val dateStr = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth)
+        val filteredEvents = calendarEvents.filter { event ->
+            val eventDateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(event.dateDebut)
+            eventDateStr.startsWith(dateStr)
+        }
         
-        lifecycleScope.launch {
-            try {
-                // TODO: Implémenter l'appel API pour récupérer les événements d'une date spécifique
-                // val date = "$year-${month+1}-$dayOfMonth"
-                // val response = RetrofitClient.apiService.getEventsForDate(date)
-                
-                // Pour l'instant, afficher un message
-                Toast.makeText(
-                    this@CalendarActivity, 
-                    "Événements pour $dayOfMonth/${month+1}/$year", 
-                    Toast.LENGTH_SHORT
-                ).show()
-                
-            } catch (e: Exception) {
-                Toast.makeText(this@CalendarActivity, "Erreur: ${e.message}", Toast.LENGTH_SHORT).show()
-            } finally {
-                binding.progressBar.visibility = View.GONE
-            }
+        if (filteredEvents.isNotEmpty()) {
+            val eventsText = filteredEvents.joinToString("\n") { "${it.titre}: ${it.description ?: ""}" }
+            Toast.makeText(this, "Événements du $dateStr:\n$eventsText", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this, "Aucun événement pour cette date", Toast.LENGTH_SHORT).show()
         }
     }
 

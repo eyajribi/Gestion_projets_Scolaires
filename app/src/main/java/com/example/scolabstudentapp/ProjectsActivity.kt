@@ -2,132 +2,104 @@ package com.example.scolabstudentapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.scolabstudentapp.adapters.ProjectsAdapter
+import com.example.scolabstudentapp.api.RetrofitClient
 import com.example.scolabstudentapp.databinding.ActivityProjectsBinding
-import com.example.scolabstudentapp.auth.AuthManager
-import com.example.scolabstudentapp.adapters.ProjectAdapter
-import com.example.scolabstudentapp.repositories.EtudiantRepository
-import com.example.scolabstudentapp.repositories.ProjectRepository
+import com.example.scolabstudentapp.models.Projet
 import dagger.hilt.android.AndroidEntryPoint
-import android.view.View
-import javax.inject.Inject
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.first
 
 @AndroidEntryPoint
 class ProjectsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityProjectsBinding
-    private lateinit var projectAdapter: ProjectAdapter
-    
-    @Inject
-    lateinit var authManager: AuthManager
-    
-    @Inject
-    lateinit var etudiantRepository: EtudiantRepository
-    
-    @Inject
-    lateinit var projectRepository: ProjectRepository
+    private lateinit var projectAdapter: ProjectsAdapter
+    private var allProjects: List<Projet> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProjectsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Configuration de la Toolbar
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding.toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
-
+        setupToolbar()
         setupRecyclerView()
         loadProjects()
     }
 
+    private fun setupToolbar() {
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding.toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
+    }
+
     private fun setupRecyclerView() {
-        projectAdapter = ProjectAdapter { project ->
-            // Lancer l'activité de détail lors du clic
-            val intent = Intent(this@ProjectsActivity, ProjectDetailActivity::class.java)
-            intent.putExtra(ProjectDetailActivity.EXTRA_PROJECT_ID, project.id)
+        projectAdapter = ProjectsAdapter(emptyList()) { project ->
+            val intent = Intent(this, ProjectDetailActivity::class.java)
+            intent.putExtra("PROJECT_ID", project.id)
+            intent.putExtra("PROJECT_NAME", project.nom)
+            intent.putExtra("PROJECT_DESCRIPTION", project.description)
             startActivity(intent)
         }
-        binding.projectsRecyclerview.layoutManager = LinearLayoutManager(this)
-        binding.projectsRecyclerview.adapter = projectAdapter
+        binding.projectsRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.projectsRecyclerView.adapter = projectAdapter
+    }
+
+    private fun updateRecyclerView(projects: List<Projet>) {
+        // Créer un nouvel adapter avec la nouvelle liste
+        val newAdapter = ProjectsAdapter(projects) { project ->
+            val intent = Intent(this, ProjectDetailActivity::class.java)
+            intent.putExtra("PROJECT_ID", project.id)
+            intent.putExtra("PROJECT_NAME", project.nom)
+            intent.putExtra("PROJECT_DESCRIPTION", project.description)
+            startActivity(intent)
+        }
+        binding.projectsRecyclerView.adapter = newAdapter
     }
 
     private fun loadProjects() {
         lifecycleScope.launch {
             try {
-                showLoading(true)
+                binding.progressBar.visibility = View.VISIBLE
+                val response = RetrofitClient.getEtudiantProjets()
+                println("DEBUG: Réponse API projets: ${response.isSuccessful}")
                 
-                // Afficher les informations de l'étudiant connecté
-                val etudiant = etudiantRepository.getCurrentEtudiant()
-                binding.toolbar.title = "Projets - ${etudiant?.prenom ?: "Étudiant"}"
-                
-                // Utiliser le repository pour charger les projets depuis le backend
-                val result = projectRepository.refreshProjects()
-                
-                if (result.isSuccess) {
-                    // Charger les projets depuis la base locale en utilisant first() pour obtenir la valeur actuelle
-                    val projectsList = projectRepository.allProjects.first()
-                    projectAdapter.submitList(projectsList)
-                    binding.emptyViewText.visibility = if (projectsList.isEmpty()) View.VISIBLE else View.GONE
-                    binding.emptyViewText.text = "Aucun projet trouvé pour ${etudiant?.prenom ?: "l'étudiant"}"
+                if (response.isSuccessful) {
+                    val projects = response.body()
+                    if (projects != null && projects.isNotEmpty()) {
+                        allProjects = projects
+                        showContent(true)
+                        updateRecyclerView(projects)
+                    } else {
+                        showContent(false)
+                    }
                 } else {
-                    // En cas d'erreur, afficher les données de test
-                    println("DEBUG: Erreur chargement projets, utilisation des données de test")
-                    loadSampleProjects(etudiant?.prenom ?: "Étudiant")
+                    println("DEBUG: Erreur API projets: ${response.code()} - ${response.message()}")
+                    showContent(false)
+                    Toast.makeText(this@ProjectsActivity, "Erreur de chargement: ${response.message()}", Toast.LENGTH_LONG).show()
                 }
                 
-                Toast.makeText(this@ProjectsActivity, "Projets chargés", Toast.LENGTH_SHORT).show()
-                
             } catch (e: Exception) {
-                println("DEBUG: Exception dans loadProjects: ${e.message}")
-                e.printStackTrace()
-                // En cas d'exception, utiliser les données de test
-                loadSampleProjects("Étudiant")
+                println("DEBUG: Exception chargement projets: ${e.message}")
+                showContent(false)
+                Toast.makeText(this@ProjectsActivity, "Erreur réseau: ${e.message}", Toast.LENGTH_LONG).show()
             } finally {
-                showLoading(false)
+                binding.progressBar.visibility = View.GONE
             }
         }
     }
-    
-    private fun loadSampleProjects(studentName: String) {
-        val sampleProjects = listOf(
-            com.example.scolabstudentapp.models.Projet(
-                id = "1",
-                nom = "Application Mobile Scolab",
-                description = "Développement d'une application mobile pour la gestion des projets scolaires",
-                dateDebut = java.util.Date(),
-                dateFin = java.util.Date(),
-                statut = com.example.scolabstudentapp.models.StatutProjet.EN_COURS
-            ),
-            com.example.scolabstudentapp.models.Projet(
-                id = "2",
-                nom = "Site Web Universitaire",
-                description = "Création d'un site web pour la faculté des sciences",
-                dateDebut = java.util.Date(),
-                dateFin = java.util.Date(),
-                statut = com.example.scolabstudentapp.models.StatutProjet.EN_COURS
-            ),
-            com.example.scolabstudentapp.models.Projet(
-                id = "3",
-                nom = "Base de Données Étudiants",
-                description = "Conception et implémentation d'une base de données pour la gestion des étudiants",
-                dateDebut = java.util.Date(),
-                dateFin = java.util.Date(),
-                statut = com.example.scolabstudentapp.models.StatutProjet.PLANIFIE
-            )
-        )
-        
-        projectAdapter.submitList(sampleProjects)
-        binding.emptyViewText.visibility = View.GONE
-        Toast.makeText(this@ProjectsActivity, "${sampleProjects.size} projet(s) de test affiché(s)", Toast.LENGTH_SHORT).show()
-    }
-    
-    private fun showLoading(show: Boolean) {
-        binding.progressBar.visibility = if (show) View.VISIBLE else View.GONE
+
+    private fun showContent(hasContent: Boolean) {
+        if (hasContent) {
+            binding.projectsRecyclerView.visibility = View.VISIBLE
+            binding.emptyState.visibility = View.GONE
+        } else {
+            binding.projectsRecyclerView.visibility = View.GONE
+            binding.emptyState.visibility = View.VISIBLE
+        }
     }
 }

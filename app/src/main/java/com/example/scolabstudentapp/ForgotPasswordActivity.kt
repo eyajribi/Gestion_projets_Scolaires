@@ -115,6 +115,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
     @Deprecated("Utilisez OnBackPressedDispatcher à la place de onBackPressed.")
     override fun onBackPressed() {
+        super.onBackPressed()
         navigateToLogin()
     }
 }

@@ -7,15 +7,25 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.example.scolabstudentapp.api.RetrofitClient
+import com.example.scolabstudentapp.auth.AuthManager
+import com.example.scolabstudentapp.test.TestScript
 import com.example.scolabstudentapp.databinding.ActivityLoginBinding
+import com.example.scolabstudentapp.models.ReqRes
+import com.example.scolabstudentapp.models.AuthResponse
+import com.example.scolabstudentapp.models.User
 import com.example.scolabstudentapp.viewmodels.LoginResult
 import com.example.scolabstudentapp.viewmodels.LoginViewModel
+import com.example.scolabstudentapp.StudentDashboardActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
@@ -25,6 +35,9 @@ class LoginActivity : AppCompatActivity() {
     
     // Utilisation de Hilt pour injecter le ViewModel
     private val viewModel: LoginViewModel by viewModels()
+    
+    @Inject
+    lateinit var authManager: AuthManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +70,8 @@ class LoginActivity : AppCompatActivity() {
                 binding.loginErrorTextView.text = "Format d'email invalide."
                 binding.loginErrorTextView.visibility = View.VISIBLE
             } else {
-                viewModel.login(email, password)
+                // Utiliser le nouveau backend pour la connexion
+                loginWithBackend(email, password)
             }
         }
 
@@ -75,6 +89,84 @@ class LoginActivity : AppCompatActivity() {
 
         binding.registerTextView.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
+        }
+        
+        // Bouton de test automatique (optionnel - pour développement)
+        binding.loginButton.setOnLongClickListener {
+            // Test automatique avec islem@gmail.com
+            binding.emailEditText.setText("islem@gmail.com")
+            binding.passwordEditText.setText("azertyA1*")
+            
+            // Lancer le test complet
+            lifecycleScope.launch {
+                TestScript.runCompleteTest()
+            }
+            
+            Toast.makeText(this, "Test automatique lancé", Toast.LENGTH_SHORT).show()
+            true
+        }
+    }
+
+    private fun loginWithBackend(email: String, password: String) {
+        println("DEBUG: Début de connexion avec le backend")
+        println("DEBUG: Email: $email")
+        
+        lifecycleScope.launch {
+            try {
+                binding.loginButton.isEnabled = false
+                binding.progressBar.visibility = View.VISIBLE
+                
+                val loginRequest = com.example.scolabstudentapp.models.ReqRes(
+                    email = email,
+                    password = password
+                )
+                
+                println("DEBUG: Envoi de la requête de connexion...")
+                val response = RetrofitClient.login(loginRequest)
+                
+                println("DEBUG: Réponse reçue - Code: ${response.code()}, Successful: ${response.isSuccessful()}")
+                
+                if (response.isSuccessful) {
+                    val loginResponse = response.body()
+                    println("DEBUG: Corps de la réponse: $loginResponse")
+                    
+                    if (loginResponse?.status == "success") {
+                        println("DEBUG: Connexion réussie, sauvegarde du token...")
+                        
+                        // Sauvegarder le token
+                        RetrofitClient.saveToken(loginResponse.token)
+                        println("DEBUG: Token sauvegardé: ${loginResponse.token?.take(20)}...")
+                        
+                        // Sauvegarder les informations utilisateur
+                        loginResponse.user?.let { user ->
+                            println("DEBUG: Sauvegarde de l'utilisateur: ${user.email}")
+                            authManager.saveCurrentUser(user)
+                        } ?: println("DEBUG: Aucun utilisateur dans la réponse")
+                        
+                        // Naviguer vers le dashboard
+                        println("DEBUG: Navigation vers le dashboard...")
+                        startActivity(Intent(this@LoginActivity, StudentDashboardActivity::class.java))
+                        finish()
+                    } else {
+                        println("DEBUG: Échec de connexion - Status: ${loginResponse?.status}, Message: ${loginResponse?.message}")
+                        binding.loginErrorTextView.text = loginResponse?.message ?: "Erreur de connexion"
+                        binding.loginErrorTextView.visibility = View.VISIBLE
+                    }
+                } else {
+                    println("DEBUG: Erreur HTTP - Code: ${response.code()}, Message: ${response.message()}")
+                    binding.loginErrorTextView.text = "Erreur de connexion: ${response.code()} - ${response.message()}"
+                    binding.loginErrorTextView.visibility = View.VISIBLE
+                }
+            } catch (e: Exception) {
+                println("DEBUG: Exception lors de la connexion: ${e.message}")
+                e.printStackTrace()
+                binding.loginErrorTextView.text = "Erreur réseau: ${e.message}"
+                binding.loginErrorTextView.visibility = View.VISIBLE
+            } finally {
+                binding.loginButton.isEnabled = true
+                binding.progressBar.visibility = View.GONE
+                println("DEBUG: Fin de la tentative de connexion")
+            }
         }
     }
 
@@ -113,7 +205,6 @@ class LoginActivity : AppCompatActivity() {
             )
             
             // Sauvegarder dans AuthManager
-            val authManager = com.example.scolabstudentapp.auth.AuthManager(this)
             authManager.saveToken(mockResponse.token ?: "")
             authManager.saveCurrentUser(mockResponse.user ?: return@let)
             

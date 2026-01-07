@@ -10,6 +10,7 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.scolabstudentapp.api.RetrofitClient
+import com.example.scolabstudentapp.StudentDashboardActivity
 import com.example.scolabstudentapp.databinding.ActivityGithubAuthBinding
 import com.example.scolabstudentapp.models.AuthRequest
 import kotlinx.coroutines.launch

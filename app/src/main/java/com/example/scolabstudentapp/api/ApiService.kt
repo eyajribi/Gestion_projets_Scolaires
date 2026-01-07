@@ -79,7 +79,7 @@ interface ApiService {
     suspend fun getMonGroupe(@Header("Authorization") token: String): Response<Groupe>
 
     // ==================== ETUDIANT ====================
-    @PUT("/api/utilisateurs/etudiants/{id}")
+    @PUT("/api/profile/update")
     suspend fun updateEtudiant(
         @Header("Authorization") token: String,
         @Path("id") id: String,

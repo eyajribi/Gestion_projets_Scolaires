@@ -43,7 +43,7 @@
 
         <!-- Les activités de détail restent indépendantes -->
         <activity
-            android:name=".activities.ProjectDetailActivity"
+            android:name="ProjectDetailActivity"
             android:exported="false"
             android:theme="@style/Theme.ScolabStudentApp.NoActionBar" />
 

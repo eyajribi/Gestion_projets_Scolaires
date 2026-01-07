@@ -42,7 +42,7 @@ class FeedbacksActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        feedbacksAdapter = FeedbacksAdapter(emptyList())
+        feedbacksAdapter = FeedbacksAdapter(mutableListOf())
         feedbacksAdapter.setOnReplyClickListener { feedback ->
             showReplyDialog(feedback)
         }
@@ -53,28 +53,47 @@ class FeedbacksActivity : AppCompatActivity() {
     }
 
     private fun loadFeedbacks() {
+        println("DEBUG: Chargement des feedbacks depuis le backend")
         binding.progressBar.visibility = View.VISIBLE
-        binding.emptyViewText.visibility = View.GONE
         
         lifecycleScope.launch {
             try {
-                val response = RetrofitClient.getMyFeedbacks()
+                // Utiliser le nouveau backend pour charger les feedbacks
+                val response = RetrofitClient.getEtudiantNotifications()
+                
                 if (response.isSuccessful) {
-                    feedbacks = response.body()?.toMutableList() ?: mutableListOf()
-                    feedbacksAdapter.updateFeedbacks(feedbacks)
+                    val notifications = response.body() ?: emptyList()
+                    println("DEBUG: ${notifications.size} notifications/feedbacks chargés")
                     
-                    // Gérer l'état vide
+                    // Convertir les notifications en feedbacks pour l'affichage
+                    val feedbacks = notifications.map { notification ->
+                        mapOf(
+                            "id" to notification.id,
+                            "message" to notification.message,
+                            "auteur" to "Système",
+                            "date" to notification.dateCreation,
+                            "note" to if (notification.type == "feedback") "N/A" else "N/A"
+                        )
+                    }
+                    
+                    feedbacksAdapter.submitList(feedbacks)
                     binding.emptyViewText.visibility = if (feedbacks.isEmpty()) View.VISIBLE else View.GONE
-                    binding.emptyViewText.text = getString(R.string.empty_feedbacks_message)
+                    binding.emptyViewText.text = "Aucun feedback reçu pour le moment"
+                    
+                    Toast.makeText(this@FeedbacksActivity, "${feedbacks.size} feedback(s) chargé(s)", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this@FeedbacksActivity, "Erreur de chargement: ${response.code()}", Toast.LENGTH_SHORT).show()
+                    println("DEBUG: Erreur chargement feedbacks: ${response.code()} - ${response.message()}")
                     binding.emptyViewText.visibility = View.VISIBLE
-                    binding.emptyViewText.text = getString(R.string.error_loading_data)
+                    binding.emptyViewText.text = "Erreur de chargement des feedbacks"
+                    Toast.makeText(this@FeedbacksActivity, "Erreur: ${response.message()}", Toast.LENGTH_LONG).show()
                 }
+                
             } catch (e: Exception) {
-                Toast.makeText(this@FeedbacksActivity, "Erreur: ${e.message}", Toast.LENGTH_SHORT).show()
+                println("DEBUG: Exception dans loadFeedbacks: ${e.message}")
+                e.printStackTrace()
                 binding.emptyViewText.visibility = View.VISIBLE
-                binding.emptyViewText.text = getString(R.string.error_network_connection, e.message)
+                binding.emptyViewText.text = "Erreur de connexion"
+                Toast.makeText(this@FeedbacksActivity, "Erreur réseau: ${e.message}", Toast.LENGTH_LONG).show()
             } finally {
                 binding.progressBar.visibility = View.GONE
             }

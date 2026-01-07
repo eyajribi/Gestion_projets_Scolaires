@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.example.scolabstudentapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.scolabstudentapp"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -68,7 +68,7 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-compiler:2.48")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.24")
-    implementation("androidx.databinding:databinding-runtime:8.2.2")
+    implementation("androidx.databinding:databinding-runtime:8.7.3")
     
     // Google Sign-In
     implementation("com.google.android.gms:play-services-auth:20.7.0")

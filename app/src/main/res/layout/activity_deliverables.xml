@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_arrow_back"
-            app:title="Déposer un livrable" />
+            app:title="@string/deliverable_screen_title" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -26,12 +26,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tâche"
+            android:text="@string/deliverable_task_label"
             android:textAppearance="?attr/textAppearanceLabelLarge" />
 
         <TextView
@@ -56,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Sélectionner un fichier"
+            android:text="@string/deliverable_select_file_button"
             app:icon="@drawable/ic_upload_file" />
 
         <TextView

@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.scolabstudentapp.databinding.ItemFeedbackBinding
 import com.example.scolabstudentapp.models.Feedback
 
-class FeedbacksAdapter(private var feedbacks: List<Feedback>) : RecyclerView.Adapter<FeedbacksAdapter.FeedbackViewHolder>() {
+class FeedbacksAdapter(private var feedbacks: MutableList<Feedback>) : RecyclerView.Adapter<FeedbacksAdapter.FeedbackViewHolder>() {
 
     private var onReplyClickListener: ((Feedback) -> Unit)? = null
 
@@ -16,7 +16,8 @@ class FeedbacksAdapter(private var feedbacks: List<Feedback>) : RecyclerView.Ada
     }
 
     fun updateFeedbacks(newFeedbacks: List<Feedback>) {
-        feedbacks = newFeedbacks
+        feedbacks.clear()
+        feedbacks.addAll(newFeedbacks)
         notifyDataSetChanged()
     }
 
@@ -27,12 +28,10 @@ class FeedbacksAdapter(private var feedbacks: List<Feedback>) : RecyclerView.Ada
             binding.feedbackRatingTextView.text = feedback.note.toString()
 
             if (feedback.reponse != null) {
-                // Si une réponse existe, on l'affiche
                 binding.replySectionGroup.visibility = View.VISIBLE
                 binding.replyTextView.text = feedback.reponse
                 binding.replyButton.text = "Répondre"
             } else {
-                // Sinon, on masque la section de réponse
                 binding.replySectionGroup.visibility = View.GONE
                 binding.replyButton.text = "Répondre"
             }
@@ -53,4 +52,22 @@ class FeedbacksAdapter(private var feedbacks: List<Feedback>) : RecyclerView.Ada
     }
 
     override fun getItemCount(): Int = feedbacks.size
+
+    fun submitList(newFeedbacks: List<Map<String, String>>) {
+        feedbacks.clear()
+        newFeedbacks.forEach { feedbackMap ->
+            val feedback = Feedback(
+                id = feedbackMap["id"] ?: "",
+                commentaire = feedbackMap["message"] ?: "",
+                note = feedbackMap["note"]?.toFloatOrNull() ?: 0f,
+                projetNom = feedbackMap["auteur"] ?: "Système",
+                dateCreation = feedbackMap["date"] ?: "",
+                reponse = null,
+                dateReponse = null,
+                evaluateur = feedbackMap["auteur"] ?: "Système"
+            )
+            feedbacks.add(feedback)
+        }
+        notifyDataSetChanged()
+    }
 }
