@@ -19,7 +19,6 @@ import java.io.File
 class LivrablesActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDeliverablesBinding
-    private var livrables: List<Livrable> = emptyList()
 
     private val pickFileLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
@@ -54,7 +53,7 @@ class LivrablesActivity : AppCompatActivity() {
         pickFileLauncher.launch(intent)
     }
 
-    private fun uploadFile(uri: Uri, livrableId: String) {
+    private fun uploadFile(uri: Uri, livrableId: String) { // TODO: remplacer livrableId par l'ID réel du livrable
         binding.progressBar.visibility = android.view.View.VISIBLE
         val file = File(contentResolver.openInputStream(uri)?.let { inputStream ->
             val tempFile = File.createTempFile("upload", null, cacheDir)
@@ -69,8 +68,7 @@ class LivrablesActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                val token = RetrofitClient.getToken() ?: ""
-                val response = RetrofitClient.apiService.soumettreLivrable(token, livrableId, body)
+                val response = RetrofitClient.submitLivrable(livrableId, body)
                 if (response.isSuccessful) {
                     Toast.makeText(this@LivrablesActivity, "Upload réussi", Toast.LENGTH_SHORT).show()
                     // TODO: rafraîchir la liste si besoin
@@ -78,7 +76,7 @@ class LivrablesActivity : AppCompatActivity() {
                     Toast.makeText(this@LivrablesActivity, "Échec upload", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@LivrablesActivity, "Erreur: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@LivrablesActivity, "Erreur: "+e.message, Toast.LENGTH_SHORT).show()
             } finally {
                 binding.progressBar.visibility = android.view.View.GONE
             }

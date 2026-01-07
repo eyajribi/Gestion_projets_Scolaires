@@ -28,6 +28,9 @@ class StudentDashboardActivity : AppCompatActivity() {
         binding = ActivityStudentDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // S'assurer que RetrofitClient utilise le bon AuthManager pour le token JWT
+        RetrofitClient.setAuthManager(authManager)
+
         setupToolbar()
         setupClickListeners()
         loadDashboardData()
@@ -117,6 +120,7 @@ class StudentDashboardActivity : AppCompatActivity() {
             try {
                 // Charger les projets
                 val projectsResponse = RetrofitClient.getEtudiantProjets()
+                println("DEBUG: Réponse brute projets: ${projectsResponse.body()}")
                 val projectsCount = if (projectsResponse.isSuccessful) {
                     projectsResponse.body()?.size ?: 0
                 } else 0
@@ -263,6 +267,15 @@ class StudentDashboardActivity : AppCompatActivity() {
             R.id.action_feedbacks -> {
                 val intent = Intent(this, FeedbacksActivity::class.java)
                 startActivity(intent)
+                true
+            }
+            R.id.menu_logout -> {
+                // Déconnexion : effacer la session et revenir à l'écran de login
+                authManager.clearToken()
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
                 true
             }
             else -> super.onOptionsItemSelected(item)

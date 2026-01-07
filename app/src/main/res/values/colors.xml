@@ -1,59 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Material 3 Light Theme Colors (Nouvelle Palette) -->
-    <color name="md_theme_light_primary">#2196F3</color>
+    <color name="orange">#FFA726</color>
+    <color name="green">#43A047</color>
+    <color name="red">#E53935</color>
+    <color name="gray">#757575</color>
+    <color name="blue">#1E88E5</color>
+    <color name="purple_700">#7B1FA2</color>
+    <color name="md_theme_light_primary">#6750A4</color>
     <color name="md_theme_light_onPrimary">#FFFFFF</color>
-    <color name="md_theme_light_primaryContainer">#BBDEFB</color>
-    <color name="md_theme_light_onPrimaryContainer">#0D47A1</color>
-    <color name="md_theme_light_secondary">#607D8B</color>
+    <color name="md_theme_light_primaryContainer">#EADDFF</color>
+    <color name="md_theme_light_onPrimaryContainer">#21005D</color>
+    <color name="md_theme_light_secondary">#625B71</color>
     <color name="md_theme_light_onSecondary">#FFFFFF</color>
-    <color name="md_theme_light_surface">#FFFFFF</color>
-    <color name="md_theme_light_onSurface">#212121</color>
-    <color name="md_theme_light_surfaceVariant">#F5F5F5</color>
-    <color name="md_theme_light_error">#D32F2F</color>
+    <color name="md_theme_light_surface">#FFFBFE</color>
+    <color name="md_theme_light_onSurface">#1C1B1F</color>
+    <color name="md_theme_light_error">#B3261E</color>
     <color name="md_theme_light_onError">#FFFFFF</color>
-    <color name="md_theme_light_outline">#BDBDBD</color>
-
-    <!-- Couleurs "Legacy" pour la compatibilité des anciens drawables (Correction) -->
-    <color name="primary">@color/md_theme_light_primary</color> <!-- #2196F3 -->
-    <color name="primary_dark">#1976D2</color>
-    <color name="primary_light">#E3F2FD</color> <!-- AJOUTÉ -->
-    <color name="accent">#00639C</color>
-    <color name="accent_dark">#004A75</color>
-    <color name="secondary">@color/md_theme_light_secondary</color> <!-- #607D8B -->
-
-    <!-- Couleurs de Texte Legacy -->
-    <color name="text_light">#FFFFFF</color>
-    <color name="text_white">#FFFFFF</color>
-    <color name="text_primary">#212121</color>
-    <color name="text_secondary">#757575</color>
-
-    <!-- Couleurs de Fond Legacy -->
-    <color name="background">#FFFFFF</color>
-    <color name="card_background">#FFFFFF</color>
-    <color name="input_background">#FAFAFA</color>
-    <color name="progress_background">#E0E0E0</color>
-    <color name="success_background">#E8F5E9</color> <!-- AJOUTÉ -->
-
-    <!-- Couleurs de Bordure et Gris Legacy -->
-    <color name="border">#E0E0E0</color>
-    <color name="border_light">#EEEEEE</color> <!-- AJOUTÉ -->
-    <color name="gray">#9E9E9E</color>
-    <color name="gray_light">#F5F5F5</color>
-
-    <!-- Couleurs Sémantiques Legacy -->
-    <color name="success">#4CAF50</color>
-    <color name="warning">#FF9800</color>
-    <color name="error">@color/md_theme_light_error</color> <!-- #D32F2F -->
-    
-    <!-- Couleurs supplémentaires pour les statuts -->
-    <color name="purple_500">#9C27B0</color>
-    <color name="green_500">#4CAF50</color>
-    <color name="orange_500">#FF9800</color>
-    <color name="grey_500">#9E9E9E</color>
-    
-    <!-- Autres couleurs génériques -->
-    <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
-    <color name="blue">@color/md_theme_light_primary</color>
+    <color name="primary">#6750A4</color>
+    <color name="primary_light">#EADDFF</color>
+    <color name="secondary">#625B71</color>
+    <color name="accent">#03DAC5</color>
+    <color name="accent_dark">#018786</color>
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_light">#F5F5F5</color>
+    <color name="input_background">#F5F5F5</color>
+    <color name="border">#DDDDDD</color>
+    <color name="border_light">#EEEEEE</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="progress_background">#E0E0E0</color>
+    <color name="success_background">#C8E6C9</color>
+    <color name="gray_light">#EEEEEE</color>
+    <color name="black">#000000</color>
+    <color name="purple_500">#6200EE</color>
+    <color name="background">#F6F6F6</color>
+    <color name="success">#43A047</color>
+    <color name="error">#E53935</color>
 </resources>

@@ -13,8 +13,10 @@ data class Projet(
     @SerializedName("id") val id: String,
     @SerializedName("nom") val nom: String,
     @SerializedName("description") val description: String,
-    @SerializedName("dateDebut") val dateDebut: Date,
-    @SerializedName("dateFin") val dateFin: Date,
+    @SerializedName("dateDebut") val dateDebut: String,
+    @SerializedName("dateFin") val dateFin: String,
+    @SerializedName("dateCreation") val dateCreation: String,
+    @SerializedName("dateArchivage") val dateArchivage: String?,
     @SerializedName("statut") val statut: StatutProjet,
     // Pour la simplicité de Room, les objets complexes sont ignorés pour l'instant.
     // @SerializedName("enseignant") val enseignant: Enseignant? = null,

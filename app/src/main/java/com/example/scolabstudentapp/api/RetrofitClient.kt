@@ -2,6 +2,7 @@ package com.example.scolabstudentapp.api
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.scolabstudentapp.auth.AuthManager
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -36,6 +37,16 @@ object RetrofitClient {
     private lateinit var sharedPreferences: SharedPreferences
     private var retrofit: Retrofit? = null
 
+    private var authManager: AuthManager? = null
+
+    private var apiService: ApiService? = null
+    private var etudiantApiService: EtudiantApiService? = null
+    private var authService: AuthService? = null
+
+    fun setAuthManager(manager: AuthManager) {
+        authManager = manager
+    }
+
     fun initialize(context: Context) {
         sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
     }
@@ -50,8 +61,8 @@ object RetrofitClient {
                 .addInterceptor(loggingInterceptor)
                 .addInterceptor { chain ->
                     val originalRequest = chain.request()
-                    val token = getToken()
-
+                    val token = authManager?.getToken()
+                    println("DEBUG RetrofitClient: Token utilisé pour Authorization: $token")
                     val newRequest = originalRequest.newBuilder()
                         .header("Content-Type", "application/json")
                         .apply {
@@ -77,86 +88,83 @@ object RetrofitClient {
         return retrofit!!
     }
 
-    val apiService: ApiService by lazy {
-        getRetrofitInstance().create(ApiService::class.java)
-    }
-    
-    val etudiantApiService: EtudiantApiService by lazy {
-        getRetrofitInstance().create(EtudiantApiService::class.java)
-    }
-    
-    val authService: AuthService by lazy {
-        getRetrofitInstance().create(AuthService::class.java)
+    fun getApiService(): ApiService {
+        if (apiService == null) {
+            apiService = getRetrofitInstance().create(ApiService::class.java)
+        }
+        return apiService!!
     }
 
-    // Gestion des tokens
-    fun saveToken(token: String?) {
-        if (::sharedPreferences.isInitialized) {
-            sharedPreferences.edit().putString("user_token", token).apply()
-            println("DEBUG: Token sauvegardé: ${token?.take(20)}...")
-        } else {
-            println("DEBUG: SharedPreferences non initialisé, impossible de sauvegarder le token")
+    fun getEtudiantApiService(): EtudiantApiService {
+        if (etudiantApiService == null) {
+            etudiantApiService = getRetrofitInstance().create(EtudiantApiService::class.java)
         }
+        return etudiantApiService!!
+    }
+
+    fun getAuthService(): AuthService {
+        if (authService == null) {
+            authService = getRetrofitInstance().create(AuthService::class.java)
+        }
+        return authService!!
     }
 
     fun getToken(): String? {
-        return if (::sharedPreferences.isInitialized) {
-            val token = sharedPreferences.getString("user_token", null)
-            println("DEBUG: Token récupéré: ${token?.take(20)}...")
-            token
-        } else {
-            println("DEBUG: SharedPreferences non initialisé, aucun token disponible")
-            null
-        }
+        return authManager?.getToken()
+    }
+
+    fun saveToken(token: String?) {
+        if (token != null) authManager?.saveToken(token)
     }
 
     fun clearTokens() {
-        if (::sharedPreferences.isInitialized) {
-            sharedPreferences.edit().remove("user_token").apply()
-        }
+        authManager?.clearToken()
     }
 
     private fun getAuthHeader(): String? {
-        return sharedPreferences.getString("auth_token", null)
+        return authManager?.getAuthHeader()
     }
 
     // Méthodes pour accéder aux endpoints avec authentification correcte
-    suspend fun getMyProjects() = apiService.getProjetsEtudiant(getAuthHeader() ?: "")
-    suspend fun getMyTasks() = apiService.getMesTaches(getAuthHeader() ?: "")
-    suspend fun getMyTasksSorted(sort: String?) = apiService.getTachesTriees(getAuthHeader() ?: "", sort)
-    suspend fun updateTaskStatus(taskId: String, status: String) = apiService.updateStatutTache(getAuthHeader() ?: "", taskId, status)
-    suspend fun submitLivrable(livrableId: String, file: okhttp3.MultipartBody.Part) = apiService.soumettreLivrable(getAuthHeader() ?: "", livrableId, file)
-    suspend fun getLivrableComments(livrableId: String) = apiService.getCommentairesLivrable(getAuthHeader() ?: "", livrableId)
-    suspend fun getNotifications() = apiService.getNotifications(getAuthHeader() ?: "")
-    suspend fun getMyFeedbacks() = apiService.getMyFeedbacks(getAuthHeader() ?: "")
-    suspend fun getMyEvents() = apiService.getMyEvents(getAuthHeader() ?: "")
-    suspend fun getEventsForDate(date: String) = apiService.getEventsForDate(getAuthHeader() ?: "", date)
-    
+    suspend fun getMyProjects() = getApiService().getProjetsEtudiant(getAuthHeader() ?: "")
+    suspend fun getMyTasks() = getApiService().getMesTaches(getAuthHeader() ?: "")
+    suspend fun getMyTasksSorted(sort: String?) = getApiService().getTachesTriees(getAuthHeader() ?: "", sort)
+    suspend fun updateTaskStatus(taskId: String, status: String) = getApiService().updateStatutTache(getAuthHeader() ?: "", taskId, status)
+    suspend fun submitLivrable(livrableId: String, file: okhttp3.MultipartBody.Part) = getApiService().soumettreLivrable(getAuthHeader() ?: "", livrableId, file)
+    suspend fun getLivrableComments(livrableId: String) = getApiService().getCommentairesLivrable(getAuthHeader() ?: "", livrableId)
+    suspend fun getNotifications() = getApiService().getNotifications(getAuthHeader() ?: "")
+    suspend fun getMyFeedbacks() = getApiService().getMyFeedbacks(getAuthHeader() ?: "")
+    suspend fun getMyEvents() = getApiService().getMyEvents(getAuthHeader() ?: "")
+    suspend fun getEventsForDate(date: String) = getApiService().getEventsForDate(getAuthHeader() ?: "", date)
+
     // Nouveaux endpoints du backend
-    suspend fun register(req: com.example.scolabstudentapp.models.ReqRes) = authService.register(req)
-    suspend fun login(req: com.example.scolabstudentapp.models.ReqRes) = authService.login(req)
-    suspend fun refreshToken(req: com.example.scolabstudentapp.models.ReqRes) = authService.refreshToken(req)
-    suspend fun getAuthProfile() = authService.getProfile()
-    suspend fun updateProfile(updateRequest: com.example.scolabstudentapp.models.ReqRes) = authService.updateProfile(updateRequest)
-    suspend fun verifyToken(request: Map<String, String>) = authService.verifyToken(request)
-    suspend fun logout() = authService.logout()
-    suspend fun verifyEmail(request: Map<String, String>) = authService.verifyEmail(request)
-    suspend fun resendVerification(request: Map<String, String>) = authService.resendVerification(request)
-    suspend fun forgotPassword(request: Map<String, String>) = authService.forgotPassword(request)
-    suspend fun resetPassword(resetRequest: com.example.scolabstudentapp.models.ReqRes) = authService.resetPassword(resetRequest)
-    suspend fun changePassword(passwordRequest: com.example.scolabstudentapp.models.ReqRes) = authService.changePassword(passwordRequest)
-    suspend fun oauth2Success(token: String) = authService.oauth2Success(token)
-    
+    suspend fun register(req: com.example.scolabstudentapp.models.ReqRes) = getAuthService().register(req)
+    suspend fun login(req: com.example.scolabstudentapp.models.ReqRes) = getAuthService().login(req)
+    suspend fun refreshToken(req: com.example.scolabstudentapp.models.ReqRes) = getAuthService().refreshToken(req)
+    suspend fun getAuthProfile() = getAuthService().getProfile()
+    suspend fun updateProfile(updateRequest: com.example.scolabstudentapp.models.ReqRes) = getAuthService().updateProfile(updateRequest)
+    suspend fun verifyToken(request: Map<String, String>) = getAuthService().verifyToken(request)
+    suspend fun logout() = getAuthService().logout()
+    suspend fun verifyEmail(request: Map<String, String>) = getAuthService().verifyEmail(request)
+    suspend fun resendVerification(request: Map<String, String>) = getAuthService().resendVerification(request)
+    suspend fun forgotPassword(request: Map<String, String>) = getAuthService().forgotPassword(request)
+    suspend fun resetPassword(resetRequest: com.example.scolabstudentapp.models.ReqRes) = getAuthService().resetPassword(resetRequest)
+    suspend fun changePassword(passwordRequest: com.example.scolabstudentapp.models.ReqRes) = getAuthService().changePassword(passwordRequest)
+    suspend fun oauth2Success(token: String) = getAuthService().oauth2Success(token)
+
     // Endpoints étudiants
-    suspend fun getEtudiantProjets() = etudiantApiService.getProjetsEtudiant()
+    suspend fun getEtudiantProjets() = getEtudiantApiService().getProjetsEtudiant()
     suspend fun getProjectDetails(projectId: String): retrofit2.Response<com.example.scolabstudentapp.models.Projet> {
-        return etudiantApiService.getProjectDetails(projectId)
+        return getEtudiantApiService().getProjectDetails(projectId)
     }
     
-    suspend fun getEtudiantCalendrier() = etudiantApiService.getCalendrier()
-    suspend fun getEtudiantTaches(sort: String? = null) = etudiantApiService.getTachesEtudiant(sort)
-    suspend fun soumettreEtudiantLivrable(livrableId: String, file: okhttp3.MultipartBody.Part) = etudiantApiService.soumettreLivrable(livrableId, file)
-    suspend fun getEtudiantLivrableComments(livrableId: String) = etudiantApiService.getCommentairesLivrable(livrableId)
-    suspend fun changerEtudiantTacheStatut(tacheId: String, statut: String) = etudiantApiService.changerStatutTache(tacheId, statut)
-    suspend fun getEtudiantNotifications() = etudiantApiService.getNotificationsEtudiant()
+    suspend fun getEtudiantCalendrier() = getEtudiantApiService().getCalendrier()
+    suspend fun getEtudiantTaches(sort: String? = null) = getEtudiantApiService().getTachesEtudiant(sort)
+    suspend fun soumettreEtudiantLivrable(livrableId: String, file: okhttp3.MultipartBody.Part) = getEtudiantApiService().soumettreLivrable(livrableId, file)
+    suspend fun getEtudiantLivrableComments(livrableId: String) = getEtudiantApiService().getCommentairesLivrable(livrableId)
+    suspend fun changerEtudiantTacheStatut(tacheId: String, statut: String) = getEtudiantApiService().changerStatutTache(tacheId, statut)
+    suspend fun getEtudiantNotifications() = getEtudiantApiService().getNotificationsEtudiant()
+    suspend fun getEtudiantLivrablesByProjet(projetId: String) = getEtudiantApiService().getLivrablesByProjet(projetId)
+    suspend fun getEtudiantLivrablesByGroupe(groupeId: String) = getEtudiantApiService().getLivrablesByGroupe(groupeId)
+    suspend fun getEtudiantLivrableDetail(livrableId: String) = getEtudiantApiService().getLivrable(livrableId)
 }

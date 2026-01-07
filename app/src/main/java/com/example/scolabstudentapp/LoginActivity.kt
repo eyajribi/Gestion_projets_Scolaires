@@ -41,6 +41,14 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Vérification de session persistante
+        if (authManager.isLoggedIn()) {
+            // S'assurer que RetrofitClient utilise le bon AuthManager dès le démarrage
+            RetrofitClient.setAuthManager(authManager)
+            startActivity(Intent(this, StudentDashboardActivity::class.java))
+            finish()
+            return
+        }
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -133,10 +141,14 @@ class LoginActivity : AppCompatActivity() {
                     if (loginResponse?.status == "success") {
                         println("DEBUG: Connexion réussie, sauvegarde du token...")
                         
-                        // Sauvegarder le token
+                        // S'assurer que RetrofitClient utilise le bon AuthManager
+                        RetrofitClient.setAuthManager(authManager)
+                        // Sauvegarder le token dans AuthManager
+                        authManager.saveToken(loginResponse.token ?: "")
+                        println("DEBUG: Token dans AuthManager après save: ${authManager.getToken()}")
+                        // (optionnel) Sauvegarder aussi dans RetrofitClient pour compatibilité
                         RetrofitClient.saveToken(loginResponse.token)
-                        println("DEBUG: Token sauvegardé: ${loginResponse.token?.take(20)}...")
-                        
+
                         // Sauvegarder les informations utilisateur
                         loginResponse.user?.let { user ->
                             println("DEBUG: Sauvegarde de l'utilisateur: ${user.email}")

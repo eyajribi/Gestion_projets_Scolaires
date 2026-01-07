@@ -3,6 +3,7 @@ package com.example.scolabstudentapp.api
 import com.example.scolabstudentapp.models.Projet
 import com.example.scolabstudentapp.models.Tache
 import com.example.scolabstudentapp.models.Notification
+import com.example.scolabstudentapp.models.Livrable
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.*
@@ -47,4 +48,16 @@ interface EtudiantApiService {
     // 8. Recevoir les notifications
     @GET("/api/etudiants/notifications")
     suspend fun getNotificationsEtudiant(): Response<List<com.example.scolabstudentapp.models.Notification>>
+
+    // 9. Liste des livrables d'un projet
+    @GET("/api/livrables/projet/{projetId}")
+    suspend fun getLivrablesByProjet(@Path("projetId") projetId: String): Response<List<com.example.scolabstudentapp.models.Livrable>>
+
+    // 10. Liste des livrables d'un groupe
+    @GET("/api/livrables/groupe/{groupeId}")
+    suspend fun getLivrablesByGroupe(@Path("groupeId") groupeId: String): Response<List<com.example.scolabstudentapp.models.Livrable>>
+
+    // 11. Détail d'un livrable
+    @GET("/api/livrables/{id}")
+    suspend fun getLivrable(@Path("id") livrableId: String): Response<com.example.scolabstudentapp.models.Livrable>
 }

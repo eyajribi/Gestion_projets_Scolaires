@@ -10,9 +10,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.scolabstudentapp.R
+import com.example.scolabstudentapp.adapters.LivrablesAdapter
 import com.example.scolabstudentapp.api.RetrofitClient
 import com.example.scolabstudentapp.databinding.ActivityDeliverablesBinding
+import com.example.scolabstudentapp.models.Livrable
 import com.example.scolabstudentapp.viewmodels.DeliverablesViewModel
 import com.example.scolabstudentapp.viewmodels.SubmissionResult
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,6 +33,9 @@ class DeliverablesActivity : AppCompatActivity() {
     private var selectedFileUri: Uri? = null
     private var taskId: String? = null
     private var livrableId: String? = null
+
+    private lateinit var livrablesAdapter: LivrablesAdapter
+    private var projetId: String? = null
 
     private val filePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
@@ -53,7 +59,8 @@ class DeliverablesActivity : AppCompatActivity() {
         // Récupérer les données de l'intent
         taskId = intent.getStringExtra("EXTRA_TASK_ID")
         livrableId = intent.getStringExtra("EXTRA_LIVRABLE_ID") ?: taskId // Utiliser taskId comme fallback
-        
+        projetId = intent.getStringExtra("EXTRA_PROJECT_ID")
+
         val taskTitle = intent.getStringExtra("EXTRA_TASK_TITLE")
         val projectName = intent.getStringExtra("EXTRA_PROJECT_NAME") ?: "Projet"
             
@@ -88,6 +95,8 @@ class DeliverablesActivity : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
         setupObservers()
+        setupLivrablesRecyclerView()
+        loadLivrables()
     }
 
     private fun submitLivrable(livrableId: String, fileUri: android.net.Uri) {
@@ -202,6 +211,52 @@ class DeliverablesActivity : AppCompatActivity() {
         } else {
             binding.progressBar.visibility = View.GONE
             binding.uploadButton.isEnabled = true
+        }
+    }
+
+    private fun setupLivrablesRecyclerView() {
+        livrablesAdapter = LivrablesAdapter { livrable ->
+            // Action au clic sur un livrable : afficher détails ou proposer dépôt
+            if (livrable.statut == "A_SOUMETTRE") {
+                // Pré-remplir l'UI pour dépôt
+                livrableId = livrable.id
+                binding.taskTitleDeliverableText.text = livrable.nom
+                binding.selectedFileNameText.text = ""
+                binding.selectedFileNameText.visibility = View.GONE
+                binding.uploadButton.isEnabled = false
+                Toast.makeText(this, "Sélectionnez un fichier pour déposer ce livrable", Toast.LENGTH_SHORT).show()
+            } else {
+                // Afficher détails : fichier, note, commentaire
+                val details = StringBuilder()
+                details.append("Statut : ${livrable.statut}\n")
+                livrable.fichier?.let { f ->
+                    details.append("Fichier : ${f.nom}\n")
+                }
+                livrable.evaluation?.let { e ->
+                    details.append("Note : ${e.note}\nCommentaire : ${e.commentaire ?: "-"}")
+                }
+                Toast.makeText(this, details.toString(), Toast.LENGTH_LONG).show()
+            }
+        }
+        binding.livrablesRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.livrablesRecyclerView.adapter = livrablesAdapter
+    }
+
+    private fun loadLivrables() {
+        val pid = projetId ?: return
+        lifecycleScope.launch {
+            try {
+                val response = com.example.scolabstudentapp.api.RetrofitClient.getEtudiantLivrablesByProjet(pid)
+                if (response.isSuccessful) {
+                    val livrables = response.body() ?: emptyList()
+                    livrablesAdapter.submitList(livrables)
+                    binding.livrablesRecyclerView.visibility = if (livrables.isNotEmpty()) View.VISIBLE else View.GONE
+                } else {
+                    Toast.makeText(this@DeliverablesActivity, "Erreur chargement livrables: ${response.message()}", Toast.LENGTH_LONG).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@DeliverablesActivity, "Erreur réseau: ${e.message}", Toast.LENGTH_LONG).show()
+            }
         }
     }
 

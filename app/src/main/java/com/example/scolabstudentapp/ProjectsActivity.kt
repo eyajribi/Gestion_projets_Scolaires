@@ -2,6 +2,8 @@ package com.example.scolabstudentapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +30,7 @@ class ProjectsActivity : AppCompatActivity() {
 
         setupToolbar()
         setupRecyclerView()
+        setupSearch()
         loadProjects()
     }
 
@@ -59,6 +62,31 @@ class ProjectsActivity : AppCompatActivity() {
             startActivity(intent)
         }
         binding.projectsRecyclerView.adapter = newAdapter
+    }
+
+    private fun setupSearch() {
+        binding.searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filterProjects(s?.toString() ?: "")
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+        binding.searchButton.setOnClickListener {
+            filterProjects(binding.searchEditText.text.toString())
+        }
+    }
+
+    private fun filterProjects(query: String) {
+        val filtered = if (query.isBlank()) {
+            allProjects
+        } else {
+            allProjects.filter {
+                it.nom.contains(query, ignoreCase = true) ||
+                (it.description?.contains(query, ignoreCase = true) ?: false)
+            }
+        }
+        updateRecyclerView(filtered)
     }
 
     private fun loadProjects() {

@@ -69,6 +69,14 @@
             tools:visibility="visible"
             tools:text="rapport_final_version_3.pdf" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/livrablesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="16dp"
+            android:visibility="visible"
+            tools:listitem="@layout/item_livrable" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"

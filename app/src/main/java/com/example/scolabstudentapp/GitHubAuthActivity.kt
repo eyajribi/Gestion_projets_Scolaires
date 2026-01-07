@@ -10,9 +10,7 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.scolabstudentapp.api.RetrofitClient
-import com.example.scolabstudentapp.StudentDashboardActivity
 import com.example.scolabstudentapp.databinding.ActivityGithubAuthBinding
-import com.example.scolabstudentapp.models.AuthRequest
 import kotlinx.coroutines.launch
 
 class GitHubAuthActivity : AppCompatActivity() {
@@ -62,11 +60,11 @@ class GitHubAuthActivity : AppCompatActivity() {
             try {
                 // L'API ne supporte pas l'authentification sociale, on simule un login avec un email construit à partir du code
                 val email = "github_$code@scolab.local"
-                val request = com.example.scolabstudentapp.models.LoginRequest(
-                email = email,
-                password = "github_password"
-            )
-                val response = RetrofitClient.apiService.login(request)
+                val reqRes = com.example.scolabstudentapp.models.ReqRes(
+                    email = email,
+                    password = "github_password"
+                )
+                val response = RetrofitClient.login(reqRes)
                 if (response.isSuccessful) {
                     val authResponse = response.body()
                     RetrofitClient.saveToken(authResponse?.token)
@@ -96,6 +94,7 @@ class GitHubAuthActivity : AppCompatActivity() {
         finish()
     }
 
+    @Deprecated("Utilisez onBackPressedDispatcher")
     override fun onBackPressed() {
         if (binding.webView.canGoBack()) {
             binding.webView.goBack()
