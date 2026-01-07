@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EtuProject</string>
+
+    <!-- ==================== Login / Register / Auth ==================== -->
+    <string name="login_title">Bienvenue !</string>
+    <string name="login_button">Se connecter</string>
+    <string name="remember_me">Se souvenir de moi</string>
+    <string name="forgot_password">Mot de passe oublié ?</string>
+    <string name="or_separator">ou</string>
+    <string name="continue_google">Continuer avec Google</string>
+    <string name="continue_github">Continuer avec GitHub</string>
+    <string name="no_account">Vous n\'avez pas de compte ? <font color="#00639C">Inscrivez-vous</font></string>
+
+    <string name="register_title">Créer un compte</string>
+    <string name="register_subtitle">Commencez votre parcours avec Scolab</string>
+    <string name="register_button">S\'inscrire</string>
+    <string name="has_account">Vous avez déjà un compte ? <font color="#00639C">Connectez-vous</font></string>
+
+    <string name="forgot_password_title">Mot de passe oublié ?</string>
+    <string name="forgot_password_subtitle">Entrez votre email pour recevoir un lien de réinitialisation</string>
+    <string name="forgot_password_success">Email envoyé avec succès !</string>
+    <string name="forgot_password_button">Réinitialiser le mot de passe</string>
+    <string name="forgot_password_back_to_login">Retour à la connexion</string>
+    <string name="forgot_password_spam_info">Si vous ne recevez pas l\'email, vérifiez votre dossier spam ou contactez l\'administration.</string>
+
+    <!-- ==================== Profile Screen ==================== -->
+    <string name="profile_title">Modifier le Profil</string>
+    <string name="surname_hint">Prénom</string>
+    <string name="save_changes">Enregistrer</string>
+    <string name="logout">Déconnexion</string>
+    <string name="profile_edit_button">Modifier le profil</string>
+    <string name="profile_phone_not_provided">Numéro non renseigné</string>
+    <string name="profile_photo_content_desc">Photo de profil</string>
+    <string name="change_photo">Changer la photo</string>
+
+    <!-- ==================== Other Screens ==================== -->
+    <string name="calendar_title">Calendrier</string>
+    <string name="deliverable_screen_title">Déposer un livrable</string>
+    <string name="deliverable_task_label">Tâche</string>
+    <string name="deliverable_select_file_button">Sélectionner un fichier</string>
+    <string name="deliverable_submit_button">Envoyer le livrable</string>
+    <string name="deliverable_submitted_success">Livrable soumis avec succès</string>
+
+    <!-- ==================== General & Common Strings ==================== -->
+    <string name="name_hint">Nom</string>
+    <string name="firstname_hint">Prénom</string> <!-- Ajouté -->
+    <string name="email_hint">Adresse e-mail</string>
+    <string name="phone_hint">Numéro de téléphone</string>
+    <string name="phone_helper">(Optionnel)</string>
+    <string name="password_hint">Mot de passe</string>
+    <string name="password_helper">Doit contenir au moins 8 caractères</string>
+    <string name="confirm_password_hint">Confirmer le mot de passe</string>
+    <string name="loading">Chargement...</string>
+    <string name="retry">Réessayer</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Annuler</string>
+    <string name="submit">Soumettre</string>
+    <string name="close">Fermer</string>
+    <string name="select_file">Sélectionner un fichier</string>
+    <string name="faculty_hint">Faculté</string>
+    <string name="department_hint">Département(s) (séparés par une virgule)</string>
+    <string name="level_hint">Niveau</string>
+    <string name="field_hint">Filière</string>
+
+    <!-- ==================== Empty State Messages ==================== -->
+    <string name="empty_projects_message">Vous n\'êtes inscrit à aucun projet pour le moment.</string>
+    <string name="empty_tasks_message">Aucune tâche à afficher ici.</string>
+    <string name="empty_feedbacks_message">Vous n\'avez reçu aucun feedback.</string>
+    <string name="empty_deadlines_message">Aucune échéance proche. Profitez-en !</string>
+
+    <!-- ==================== Errors & Info ==================== -->
+    <string name="error_loading_data">Erreur lors du chargement des données</string>
+    <string name="error_network_connection">Erreur de connexion : %1$s</string>
+    <string name="error_user_data_not_found">Données utilisateur non trouvées</string>
+    <string name="info_feature_not_implemented">Fonctionnalité à implémenter</string>
+    <string name="login_error_invalid_credentials">Email ou mot de passe invalide</string>
+    <string name="login_error_empty_fields">Veuillez remplir tous les champs</string>
+    <string name="register_error_password_mismatch">Les mots de passe ne correspondent pas</string>
+    <string name="register_error_email_in_use">Cette adresse e-mail est déjà utilisée</string>
+    <string name="register_error_weak_password">Le mot de passe est trop faible</string>
+    <string name="register_error_empty_fields">Veuillez remplir tous les champs obligatoires</string>
+    <string name="register_success_account_created">Compte créé avec succès ! Veuillez vous connecter.</string>
+    <string name="no_internet_connection">Pas de connexion Internet</string>
+    <string name="file_not_supported">Type de fichier non pris en charge</string>
+    <string name="file_too_large">Le fichier est trop volumineux</string>
+    <string name="logout_button">Se déconnecter</string>
+
+    <string name="appbar_scrolling_view_behavior">appbar_scrolling_view_behavior</string>
+    <string name="ic_arrow_back">ic_arrow_back</string>
+    <string name="back_to_login">Retour à la connexion</string>
+
+</resources>

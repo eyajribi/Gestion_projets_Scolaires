@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material 3 Light Theme Colors (Nouvelle Palette) -->
+    <color name="md_theme_light_primary">#2196F3</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#BBDEFB</color>
+    <color name="md_theme_light_onPrimaryContainer">#0D47A1</color>
+    <color name="md_theme_light_secondary">#607D8B</color>
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+    <color name="md_theme_light_surface">#FFFFFF</color>
+    <color name="md_theme_light_onSurface">#212121</color>
+    <color name="md_theme_light_surfaceVariant">#F5F5F5</color>
+    <color name="md_theme_light_error">#D32F2F</color>
+    <color name="md_theme_light_onError">#FFFFFF</color>
+    <color name="md_theme_light_outline">#BDBDBD</color>
+
+    <!-- Couleurs "Legacy" pour la compatibilité des anciens drawables (Correction) -->
+    <color name="primary">@color/md_theme_light_primary</color> <!-- #2196F3 -->
+    <color name="primary_dark">#1976D2</color>
+    <color name="primary_light">#E3F2FD</color> <!-- AJOUTÉ -->
+    <color name="accent">#00639C</color>
+    <color name="accent_dark">#004A75</color>
+    <color name="secondary">@color/md_theme_light_secondary</color> <!-- #607D8B -->
+
+    <!-- Couleurs de Texte Legacy -->
+    <color name="text_light">#FFFFFF</color>
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+
+    <!-- Couleurs de Fond Legacy -->
+    <color name="background">#FFFFFF</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="input_background">#FAFAFA</color>
+    <color name="progress_background">#E0E0E0</color>
+    <color name="success_background">#E8F5E9</color> <!-- AJOUTÉ -->
+
+    <!-- Couleurs de Bordure et Gris Legacy -->
+    <color name="border">#E0E0E0</color>
+    <color name="border_light">#EEEEEE</color> <!-- AJOUTÉ -->
+    <color name="gray">#9E9E9E</color>
+    <color name="gray_light">#F5F5F5</color>
+
+    <!-- Couleurs Sémantiques Legacy -->
+    <color name="success">#4CAF50</color>
+    <color name="warning">#FF9800</color>
+    <color name="error">@color/md_theme_light_error</color> <!-- #D32F2F -->
+
+    <!-- Autres couleurs génériques -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+</resources>
